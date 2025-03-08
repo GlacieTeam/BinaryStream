@@ -1,4 +1,5 @@
 # BinaryStream
+**Part of Glacie Bedrock Procotol Library.**  
 A BinaryStream Library written in C++
 
 ## License

@@ -25,7 +25,7 @@ void BinaryStream::reset() {
 }
 
 std::string BinaryStream::getAndReleaseData() {
-    std::string result = std::move<std::string&>(mBuffer);
+    std::string result = std::move(mBuffer);
     reset();
     return result;
 }
