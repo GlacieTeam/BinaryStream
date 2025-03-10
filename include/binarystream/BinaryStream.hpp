@@ -1,5 +1,5 @@
 #pragma once
-#include <ReadOnlyBinaryStream.hpp>
+#include <binarystream/ReadOnlyBinaryStream.hpp>
 
 namespace bedrock_protocol {
 

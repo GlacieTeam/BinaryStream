@@ -1,4 +1,4 @@
-#include <BinaryStream.hpp>
+#include <binarystream/BinaryStream.hpp>
 
 namespace bedrock_protocol {
 

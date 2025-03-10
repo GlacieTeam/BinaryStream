@@ -25,12 +25,10 @@ target("BinaryStream")
         "/w44738", 
         "/w45204", 
         "/O2", 
-        "/Ob3", 
-        "/Gy", 
-        "/GF"
+        "/Ob3"
     )
     add_ldflags(
         "/OPT:REF", 
         "/OPT:ICF"
     )
-    add_files("src/*.cpp")
+    add_files("src/**.cpp")
