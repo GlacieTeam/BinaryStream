@@ -16,9 +16,6 @@ protected:
 
 private:
     template <typename T>
-    T swapEndian(T u);
-
-    template <typename T>
     bool read(T* target, bool bigEndian = false);
 
 public:

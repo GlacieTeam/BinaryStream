@@ -21,7 +21,7 @@ ReadOnlyBinaryStream::ReadOnlyBinaryStream(std::string_view buffer, bool copyBuf
 }
 
 template <typename T>
-T ReadOnlyBinaryStream::swapEndian(T u) {
+T swapEndian(T u) {
     union {
         T             u;
         unsigned char u8[sizeof(T)];

@@ -2,6 +2,9 @@
 
 namespace bedrock_protocol {
 
+template <typename T>
+T swapEndian(T u);
+
 BinaryStream::BinaryStream() : ReadOnlyBinaryStream({}, true), mBuffer(mOwnedBuffer) {}
 
 BinaryStream::BinaryStream(std::string& buffer, bool copyBuffer)
