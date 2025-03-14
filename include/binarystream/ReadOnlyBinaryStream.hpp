@@ -71,6 +71,8 @@ public:
     void getString(std::string& outString);
 
     std::string getString();
+
+    uint32_t getUnsignedInt24();
 };
 
 } // namespace bedrock_protocol
