@@ -60,6 +60,8 @@ public:
     void writeSignedBigEndianInt(int32_t value);
 
     void writeString(std::string_view value);
+
+    void writeUnsignedInt24(uint32_t value);
 };
 
 } // namespace bedrock_protocol
