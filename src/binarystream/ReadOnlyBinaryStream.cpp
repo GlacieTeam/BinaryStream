@@ -197,4 +197,11 @@ std::string ReadOnlyBinaryStream::getString() {
     return outString;
 }
 
+uint32_t ReadOnlyBinaryStream::getUnsignedInt24() {
+    uint32_t value = 0;
+    auto*    b     = reinterpret_cast<unsigned char*>(&value);
+    for (int i = 0; i < 3; i++) read<>(b + i);
+    return value;
+}
+
 } // namespace bedrock_protocol

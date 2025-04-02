@@ -98,4 +98,9 @@ void BinaryStream::writeString(std::string_view value) {
     mBuffer.append(value);
 }
 
+void BinaryStream::writeUnsignedInt24(uint32_t value) {
+    auto* b = reinterpret_cast<unsigned char*>(&value);
+    for (int i = 0; i < 3; i++) write<>(*(b + i));
+}
+
 } // namespace bedrock_protocol
