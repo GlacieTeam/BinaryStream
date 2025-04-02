@@ -23,7 +23,7 @@ public:
 
     std::string getAndReleaseData();
 
-    void writeBytes(void* origin, size_t num);
+    void writeBytes(const void* origin, size_t num);
 
     void writeByte(uint8_t value);
 

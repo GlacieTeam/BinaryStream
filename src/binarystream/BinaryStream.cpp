@@ -33,7 +33,7 @@ std::string BinaryStream::getAndReleaseData() {
     return result;
 }
 
-void BinaryStream::writeBytes(void* origin, size_t num) { mBuffer.append((const char*)origin, num); }
+void BinaryStream::writeBytes(const void* origin, size_t num) { mBuffer.append((const char*)origin, num); }
 
 void BinaryStream::writeByte(uint8_t value) { write<>(value); }
 
