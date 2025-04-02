@@ -15,7 +15,7 @@ public:
     explicit BinaryStream();
     explicit BinaryStream(std::string& buffer, bool copyBuffer = false);
 
-    size_t size() const noexcept override;
+    size_t size() const;
 
     void setPosition(size_t value);
 

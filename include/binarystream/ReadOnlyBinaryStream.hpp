@@ -21,19 +21,16 @@ private:
 public:
     explicit ReadOnlyBinaryStream(std::string_view buffer, bool copyBuffer = false);
 
-    virtual ~ReadOnlyBinaryStream();
+    size_t size() const;
 
-    virtual size_t size() const noexcept;
+    size_t getPosition() const;
 
-public:
-    size_t getPosition() const noexcept;
+    std::string getLeftBuffer() const;
 
-    std::string getLeftBuffer() const noexcept;
+    bool isOverflowed() const;
+    bool hasDataLeft() const;
 
-    bool isOverflowed() const noexcept;
-    bool hasDataLeft() const noexcept;
-
-    std::string_view view() const noexcept;
+    std::string_view view() const;
 
     bool getBytes(void* target, size_t num);
 

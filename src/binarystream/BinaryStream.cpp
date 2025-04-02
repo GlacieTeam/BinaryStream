@@ -21,7 +21,7 @@ void BinaryStream::setPosition(size_t value) { mReadPointer = value; }
 
 void BinaryStream::reserve(size_t size) { mBuffer.reserve(size); }
 
-size_t BinaryStream::size() const noexcept { return mBuffer.size(); }
+size_t BinaryStream::size() const { return mBuffer.size(); }
 
 void BinaryStream::reset() {
     mBuffer.clear();
