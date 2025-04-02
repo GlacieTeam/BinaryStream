@@ -13,6 +13,8 @@ ReadOnlyBinaryStream::ReadOnlyBinaryStream(std::string_view buffer, bool copyBuf
     mHasOverflowed = false;
 }
 
+ReadOnlyBinaryStream::~ReadOnlyBinaryStream() = default;
+
 template <typename T>
 T swapEndian(T u) {
     union {
@@ -42,13 +44,19 @@ bool ReadOnlyBinaryStream::read(T* target, bool bigEndian) {
     return true;
 }
 
-size_t ReadOnlyBinaryStream::getPosition() const { return mReadPointer; }
+size_t ReadOnlyBinaryStream::getPosition() const noexcept { return mReadPointer; }
 
-std::string ReadOnlyBinaryStream::getLeftBuffer() { return std::string(mBufferView.substr(mReadPointer)); }
+std::string ReadOnlyBinaryStream::getLeftBuffer() const noexcept {
+    return std::string(mBufferView.substr(mReadPointer));
+}
 
-bool ReadOnlyBinaryStream::isOverflowed() { return mHasOverflowed; }
+bool ReadOnlyBinaryStream::isOverflowed() const noexcept { return mHasOverflowed; }
 
-bool ReadOnlyBinaryStream::hasDataLeft() { return mReadPointer < mBufferView.size(); }
+bool ReadOnlyBinaryStream::hasDataLeft() const noexcept { return mReadPointer < mBufferView.size(); }
+
+size_t ReadOnlyBinaryStream::size() const noexcept { return mBufferView.size(); }
+
+std::string_view ReadOnlyBinaryStream::view() const noexcept { return mBufferView; }
 
 bool ReadOnlyBinaryStream::getBytes(void* target, size_t num) {
     if (mHasOverflowed) { return false; }

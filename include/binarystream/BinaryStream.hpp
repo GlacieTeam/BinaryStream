@@ -15,11 +15,15 @@ public:
     explicit BinaryStream();
     explicit BinaryStream(std::string& buffer, bool copyBuffer = false);
 
+    size_t size() const noexcept override;
+
     void setPosition(size_t value);
 
     void reserve(size_t size);
 
     void reset();
+
+    std::string& data();
 
     std::string getAndReleaseData();
 

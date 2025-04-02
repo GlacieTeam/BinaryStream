@@ -21,11 +21,15 @@ void BinaryStream::setPosition(size_t value) { mReadPointer = value; }
 
 void BinaryStream::reserve(size_t size) { mBuffer.reserve(size); }
 
+size_t BinaryStream::size() const noexcept { return mBuffer.size(); }
+
 void BinaryStream::reset() {
     mBuffer.clear();
     mReadPointer   = 0;
     mHasOverflowed = false;
 }
+
+std::string& BinaryStream::data() { return mBuffer; }
 
 std::string BinaryStream::getAndReleaseData() {
     std::string result = std::move(mBuffer);
