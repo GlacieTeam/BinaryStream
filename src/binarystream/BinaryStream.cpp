@@ -89,7 +89,7 @@ void BinaryStream::writeVarInt64(int64_t value) {
     writeUnsignedVarInt64(uvalue);
 }
 
-void BinaryStream::writeNormalizedFloat(float value) { writeVarInt64((unsigned int)(int)(value * 2147483647.0)); }
+void BinaryStream::writeNormalizedFloat(float value) { writeVarInt64((int)(value * 2147483647.0)); }
 
 void BinaryStream::writeSignedBigEndianInt(int32_t value) { write<>(value, true); }
 

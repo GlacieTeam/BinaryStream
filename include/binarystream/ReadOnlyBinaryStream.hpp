@@ -19,7 +19,6 @@ private:
     bool read(T* target, bool bigEndian = false);
 
 public:
-    explicit ReadOnlyBinaryStream();
     explicit ReadOnlyBinaryStream(std::string_view buffer, bool copyBuffer = false);
 
     size_t getPosition() const;

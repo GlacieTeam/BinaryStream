@@ -2,13 +2,6 @@
 
 namespace bedrock_protocol {
 
-ReadOnlyBinaryStream::ReadOnlyBinaryStream() {
-    mOwnedBuffer   = std::string();
-    mBufferView    = mOwnedBuffer;
-    mReadPointer   = 0;
-    mHasOverflowed = false;
-}
-
 ReadOnlyBinaryStream::ReadOnlyBinaryStream(std::string_view buffer, bool copyBuffer) {
     if (copyBuffer) {
         mOwnedBuffer = buffer;
