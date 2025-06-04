@@ -54,7 +54,7 @@ void ReadOnlyBinaryStream::setPosition(size_t value) { mReadPointer = value; }
 
 void ReadOnlyBinaryStream::resetPosition() { setPosition(0); }
 
-void ReadOnlyBinaryStream::ignoreBytes(size_t value) { setPosition(value); }
+void ReadOnlyBinaryStream::ignoreBytes(size_t value) { mReadPointer += value; }
 
 std::string ReadOnlyBinaryStream::getLeftBuffer() const { return std::string(mBufferView.substr(mReadPointer)); }
 
