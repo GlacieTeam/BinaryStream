@@ -38,3 +38,5 @@
 .xmake
 build
 CmakeLists.txt
+.cache
+compile_commands.json
