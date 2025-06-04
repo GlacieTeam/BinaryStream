@@ -21,12 +21,16 @@ private:
 
 public:
     [[nodiscard]] explicit ReadOnlyBinaryStream(std::string_view buffer, bool copyBuffer = false);
+    [[nodiscard]] explicit ReadOnlyBinaryStream(const char* data, size_t size);
+    [[nodiscard]] explicit ReadOnlyBinaryStream(const unsigned char* data, size_t size);
 
     [[nodiscard]] size_t size() const;
 
     [[nodiscard]] size_t getPosition() const;
 
     void setPosition(size_t value);
+
+    void resetPosition();
 
     void ignoreBytes(size_t length);
 
@@ -36,6 +40,10 @@ public:
     [[nodiscard]] bool hasDataLeft() const;
 
     [[nodiscard]] std::string_view view() const;
+
+    [[nodiscard]] std::string copyData() const;
+
+    [[nodiscard]] bool operator==(ReadOnlyBinaryStream const&) const;
 
     bool getBytes(void* target, size_t num);
 

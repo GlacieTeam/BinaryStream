@@ -23,6 +23,10 @@ public:
 
     [[nodiscard]] std::string& data();
 
+    [[nodiscard]] const std::string& data() const;
+
+    [[nodiscard]] std::string copyBuffer() const;
+
     [[nodiscard]] std::string getAndReleaseData();
 
     void writeBytes(const void* origin, size_t num);
@@ -66,6 +70,8 @@ public:
     void writeUnsignedInt24(uint32_t value);
 
     void writeRawBytes(std::string_view rawBuffer);
+
+    void writeStream(ReadOnlyBinaryStream const& stream);
 };
 
 } // namespace bedrock_protocol

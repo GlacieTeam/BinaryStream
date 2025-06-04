@@ -5,7 +5,7 @@ namespace bedrock_protocol {
 template <typename T>
 T swapEndian(T u);
 
-BinaryStream::BinaryStream() : ReadOnlyBinaryStream({}, true), mBuffer(mOwnedBuffer) {}
+BinaryStream::BinaryStream() : ReadOnlyBinaryStream(std::string(), true), mBuffer(mOwnedBuffer) {}
 
 BinaryStream::BinaryStream(std::string& buffer, bool copyBuffer)
 : ReadOnlyBinaryStream(buffer, copyBuffer),
@@ -30,6 +30,10 @@ void BinaryStream::reset() {
 }
 
 std::string& BinaryStream::data() { return mBuffer; }
+
+const std::string& BinaryStream::data() const { return mBuffer; }
+
+std::string BinaryStream::copyBuffer() const { return mBuffer; }
 
 std::string BinaryStream::getAndReleaseData() {
     std::string result = std::move(mBuffer);
@@ -115,5 +119,7 @@ void BinaryStream::writeRawBytes(std::string_view rawBuffer) {
     mBuffer.append(rawBuffer);
     mBufferView = mBuffer;
 }
+
+void BinaryStream::writeStream(ReadOnlyBinaryStream const& stream) { writeRawBytes(stream.mBufferView); }
 
 } // namespace bedrock_protocol

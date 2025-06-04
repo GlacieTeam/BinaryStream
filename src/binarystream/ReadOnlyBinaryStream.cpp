@@ -13,6 +13,12 @@ ReadOnlyBinaryStream::ReadOnlyBinaryStream(std::string_view buffer, bool copyBuf
     mHasOverflowed = false;
 }
 
+ReadOnlyBinaryStream::ReadOnlyBinaryStream(const char* data, size_t size)
+: ReadOnlyBinaryStream(std::string(data, size), true) {}
+
+ReadOnlyBinaryStream::ReadOnlyBinaryStream(const unsigned char* data, size_t size)
+: ReadOnlyBinaryStream((const char*)data, size) {}
+
 template <typename T>
 T swapEndian(T u) {
     union {
@@ -46,6 +52,8 @@ size_t ReadOnlyBinaryStream::getPosition() const { return mReadPointer; }
 
 void ReadOnlyBinaryStream::setPosition(size_t value) { mReadPointer = value; }
 
+void ReadOnlyBinaryStream::resetPosition() { setPosition(0); }
+
 void ReadOnlyBinaryStream::ignoreBytes(size_t value) { setPosition(value); }
 
 std::string ReadOnlyBinaryStream::getLeftBuffer() const { return std::string(mBufferView.substr(mReadPointer)); }
@@ -57,6 +65,12 @@ bool ReadOnlyBinaryStream::hasDataLeft() const { return mReadPointer < mBufferVi
 size_t ReadOnlyBinaryStream::size() const { return mBufferView.size(); }
 
 std::string_view ReadOnlyBinaryStream::view() const { return mBufferView; }
+
+std::string ReadOnlyBinaryStream::copyData() const { return std::string(mBufferView); }
+
+bool ReadOnlyBinaryStream::operator==(ReadOnlyBinaryStream const& other) const {
+    return mBufferView == other.mBufferView;
+}
 
 bool ReadOnlyBinaryStream::getBytes(void* target, size_t num) {
     if (mHasOverflowed) { return false; }
