@@ -15,6 +15,7 @@ template <typename T>
 void BinaryStream::write(T value, bool bigEndian) {
     if (bigEndian) { value = swapEndian(value); }
     mBuffer.append((const char*)(&value), sizeof(T));
+    mBufferView = mBuffer;
 }
 
 void BinaryStream::reserve(size_t size) { mBuffer.reserve(size); }
@@ -25,6 +26,7 @@ void BinaryStream::reset() {
     mBuffer.clear();
     mReadPointer   = 0;
     mHasOverflowed = false;
+    mBufferView    = mBuffer;
 }
 
 std::string& BinaryStream::data() { return mBuffer; }
@@ -35,7 +37,10 @@ std::string BinaryStream::getAndReleaseData() {
     return result;
 }
 
-void BinaryStream::writeBytes(const void* origin, size_t num) { mBuffer.append((const char*)origin, num); }
+void BinaryStream::writeBytes(const void* origin, size_t num) {
+    mBuffer.append((const char*)origin, num);
+    mBufferView = mBuffer;
+}
 
 void BinaryStream::writeByte(uint8_t value) { write<>(value); }
 
@@ -98,6 +103,7 @@ void BinaryStream::writeSignedBigEndianInt(int32_t value) { write<>(value, true)
 void BinaryStream::writeString(std::string_view value) {
     writeUnsignedVarInt((uint32_t)value.size());
     mBuffer.append(value);
+    mBufferView = mBuffer;
 }
 
 void BinaryStream::writeUnsignedInt24(uint32_t value) {
@@ -105,6 +111,9 @@ void BinaryStream::writeUnsignedInt24(uint32_t value) {
     for (int i = 0; i < 3; i++) write<>(*(b + i));
 }
 
-void BinaryStream::writeRawBytes(std::string_view rawBuffer) { mBuffer.append(rawBuffer); }
+void BinaryStream::writeRawBytes(std::string_view rawBuffer) {
+    mBuffer.append(rawBuffer);
+    mBufferView = mBuffer;
+}
 
 } // namespace bedrock_protocol
