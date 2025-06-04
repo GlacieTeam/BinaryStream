@@ -44,6 +44,10 @@ bool ReadOnlyBinaryStream::read(T* target, bool bigEndian) {
 
 size_t ReadOnlyBinaryStream::getPosition() const { return mReadPointer; }
 
+void ReadOnlyBinaryStream::setPosition(size_t value) { mReadPointer = value; }
+
+void ReadOnlyBinaryStream::ignoreBytes(size_t value) { setPosition(value); }
+
 std::string ReadOnlyBinaryStream::getLeftBuffer() const { return std::string(mBufferView.substr(mReadPointer)); }
 
 bool ReadOnlyBinaryStream::isOverflowed() const { return mHasOverflowed; }
@@ -199,6 +203,19 @@ uint32_t ReadOnlyBinaryStream::getUnsignedInt24() {
     auto*    b     = reinterpret_cast<unsigned char*>(&value);
     for (int i = 0; i < 3; i++) read<>(b + i);
     return value;
+}
+
+void ReadOnlyBinaryStream::getRawBytes(std::string& rawBuffer, size_t length) {
+    if (length > 0) {
+        rawBuffer     = mBufferView.substr(mReadPointer, length);
+        mReadPointer += length;
+    }
+}
+
+std::string ReadOnlyBinaryStream::getRawBytes(size_t length) {
+    std::string result;
+    getRawBytes(result, length);
+    return result;
 }
 
 } // namespace bedrock_protocol

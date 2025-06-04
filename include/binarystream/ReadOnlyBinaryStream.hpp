@@ -19,60 +19,68 @@ private:
     bool read(T* target, bool bigEndian = false);
 
 public:
-    explicit ReadOnlyBinaryStream(std::string_view buffer, bool copyBuffer = false);
+    [[nodiscard]] explicit ReadOnlyBinaryStream(std::string_view buffer, bool copyBuffer = false);
 
-    size_t size() const;
+    [[nodiscard]] size_t size() const;
 
-    size_t getPosition() const;
+    [[nodiscard]] size_t getPosition() const;
 
-    std::string getLeftBuffer() const;
+    void setPosition(size_t value);
 
-    bool isOverflowed() const;
-    bool hasDataLeft() const;
+    void ignoreBytes(size_t length);
 
-    std::string_view view() const;
+    [[nodiscard]] std::string getLeftBuffer() const;
+
+    [[nodiscard]] bool isOverflowed() const;
+    [[nodiscard]] bool hasDataLeft() const;
+
+    [[nodiscard]] std::string_view view() const;
 
     bool getBytes(void* target, size_t num);
 
-    uint8_t getByte();
+    [[nodiscard]] uint8_t getByte();
 
-    uint8_t getUnsignedChar();
+    [[nodiscard]] uint8_t getUnsignedChar();
 
-    uint16_t getUnsignedShort();
+    [[nodiscard]] uint16_t getUnsignedShort();
 
-    uint32_t getUnsignedInt();
+    [[nodiscard]] uint32_t getUnsignedInt();
 
-    uint64_t getUnsignedInt64();
+    [[nodiscard]] uint64_t getUnsignedInt64();
 
-    bool getBool();
+    [[nodiscard]] bool getBool();
 
-    double getDouble();
+    [[nodiscard]] double getDouble();
 
-    float getFloat();
+    [[nodiscard]] float getFloat();
 
-    int32_t getSignedInt();
+    [[nodiscard]] int32_t getSignedInt();
 
-    int64_t getSignedInt64();
+    [[nodiscard]] int64_t getSignedInt64();
 
-    int16_t getSignedShort();
+    [[nodiscard]] int16_t getSignedShort();
 
-    uint32_t getUnsignedVarInt();
+    [[nodiscard]] uint32_t getUnsignedVarInt();
 
-    uint64_t getUnsignedVarInt64();
+    [[nodiscard]] uint64_t getUnsignedVarInt64();
 
-    int32_t getVarInt();
+    [[nodiscard]] int32_t getVarInt();
 
-    int64_t getVarInt64();
+    [[nodiscard]] int64_t getVarInt64();
 
-    float getNormalizedFloat();
+    [[nodiscard]] float getNormalizedFloat();
 
-    int32_t getSignedBigEndianInt();
+    [[nodiscard]] int32_t getSignedBigEndianInt();
 
     void getString(std::string& outString);
 
-    std::string getString();
+    [[nodiscard]] std::string getString();
 
-    uint32_t getUnsignedInt24();
+    [[nodiscard]] uint32_t getUnsignedInt24();
+
+    void getRawBytes(std::string& rawBuffer, size_t length);
+
+    [[nodiscard]] std::string getRawBytes(size_t length);
 };
 
 } // namespace bedrock_protocol

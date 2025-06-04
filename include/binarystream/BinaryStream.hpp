@@ -12,20 +12,18 @@ private:
     void write(T value, bool bigEndian = false);
 
 public:
-    explicit BinaryStream();
-    explicit BinaryStream(std::string& buffer, bool copyBuffer = false);
+    [[nodiscard]] explicit BinaryStream();
+    [[nodiscard]] explicit BinaryStream(std::string& buffer, bool copyBuffer = false);
 
-    size_t size() const;
-
-    void setPosition(size_t value);
+    [[nodiscard]] size_t size() const;
 
     void reserve(size_t size);
 
     void reset();
 
-    std::string& data();
+    [[nodiscard]] std::string& data();
 
-    std::string getAndReleaseData();
+    [[nodiscard]] std::string getAndReleaseData();
 
     void writeBytes(const void* origin, size_t num);
 
@@ -66,6 +64,8 @@ public:
     void writeString(std::string_view value);
 
     void writeUnsignedInt24(uint32_t value);
+
+    void writeRawBytes(std::string_view rawBuffer);
 };
 
 } // namespace bedrock_protocol

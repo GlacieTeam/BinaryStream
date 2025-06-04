@@ -17,8 +17,6 @@ void BinaryStream::write(T value, bool bigEndian) {
     mBuffer.append((const char*)(&value), sizeof(T));
 }
 
-void BinaryStream::setPosition(size_t value) { mReadPointer = value; }
-
 void BinaryStream::reserve(size_t size) { mBuffer.reserve(size); }
 
 size_t BinaryStream::size() const { return mBuffer.size(); }
@@ -106,5 +104,7 @@ void BinaryStream::writeUnsignedInt24(uint32_t value) {
     auto* b = reinterpret_cast<unsigned char*>(&value);
     for (int i = 0; i < 3; i++) write<>(*(b + i));
 }
+
+void BinaryStream::writeRawBytes(std::string_view rawBuffer) { mBuffer.append(rawBuffer); }
 
 } // namespace bedrock_protocol
