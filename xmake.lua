@@ -14,6 +14,7 @@ target("BinaryStream")
         set_symbols("debug")
     else
         set_optimize("aggressive")
+        set_strip("all")
     end
     
     if is_plat("windows") then
