@@ -40,7 +40,8 @@ target("BinaryStream")
             "-Wall",
             "-pedantic",
             "-fexceptions",
-            "-stdlib=libc++"
+            "-stdlib=libc++",
+            "-fPIC"
         )
         add_ldflags(
             "-stdlib=libc++"
