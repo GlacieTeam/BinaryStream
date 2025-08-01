@@ -1,6 +1,9 @@
 #pragma once
+#include <algorithm>
+#include <array>
 #include <cstdint>
-#include <iostream>
+#include <string>
+#include <type_traits>
 
 namespace bedrock_protocol {
 
@@ -91,5 +94,22 @@ public:
 
     [[nodiscard]] std::string getRawBytes(size_t length);
 };
+
+namespace detail {
+template <typename T>
+    requires std::is_trivially_copyable_v<T>
+T swapEndian(T u) noexcept {
+    if constexpr (sizeof(T) == 1) {
+        return u;
+    } else {
+        std::array<uint8_t, sizeof(T)> bytes;
+        std::memcpy(bytes.data(), &u, sizeof(T));
+        std::reverse(bytes.begin(), bytes.end());
+        T result;
+        std::memcpy(&result, bytes.data(), sizeof(T));
+        return result;
+    }
+}
+} // namespace detail
 
 } // namespace bedrock_protocol

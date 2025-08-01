@@ -2,17 +2,6 @@
 
 namespace bedrock_protocol {
 
-template <typename T>
-T swapEndian(T u) {
-    union {
-        T             u;
-        unsigned char u8[sizeof(T)];
-    } source, dest;
-    source.u = u;
-    for (size_t k = 0; k < sizeof(T); k++) dest.u8[k] = source.u8[sizeof(T) - k - 1];
-    return dest.u;
-}
-
 BinaryStream::BinaryStream() : ReadOnlyBinaryStream(std::string(), true), mBuffer(mOwnedBuffer) {}
 
 BinaryStream::BinaryStream(std::string& buffer, bool copyBuffer)
@@ -21,7 +10,7 @@ BinaryStream::BinaryStream(std::string& buffer, bool copyBuffer)
 
 template <typename T>
 void BinaryStream::write(T value, bool bigEndian) {
-    if (bigEndian) { value = swapEndian(value); }
+    if (bigEndian) { value = detail::swapEndian(value); }
     mBuffer.append((const char*)(&value), sizeof(T));
     mBufferView = mBuffer;
 }

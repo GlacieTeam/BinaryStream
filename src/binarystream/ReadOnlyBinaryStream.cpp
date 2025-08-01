@@ -20,17 +20,6 @@ ReadOnlyBinaryStream::ReadOnlyBinaryStream(const unsigned char* data, size_t siz
 : ReadOnlyBinaryStream((const char*)data, size) {}
 
 template <typename T>
-T swapEndian(T u) {
-    union {
-        T             u;
-        unsigned char u8[sizeof(T)];
-    } source, dest;
-    source.u = u;
-    for (size_t k = 0; k < sizeof(T); k++) dest.u8[k] = source.u8[sizeof(T) - k - 1];
-    return dest.u;
-}
-
-template <typename T>
 bool ReadOnlyBinaryStream::read(T* target, bool bigEndian) {
     if (mHasOverflowed) { return false; }
     size_t newReadPointer = mReadPointer + sizeof(T);
@@ -44,7 +33,7 @@ bool ReadOnlyBinaryStream::read(T* target, bool bigEndian) {
         reinterpret_cast<char*>(target)
     );
     mReadPointer = newReadPointer;
-    if (bigEndian) { *target = swapEndian(*target); }
+    if (bigEndian) { *target = detail::swapEndian(*target); }
     return true;
 }
 
