@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string>
 #include <type_traits>
+#include <vector>
 
 namespace bedrock_protocol {
 
@@ -24,8 +25,9 @@ private:
 
 public:
     [[nodiscard]] explicit ReadOnlyBinaryStream(std::string_view buffer, bool copyBuffer = false);
-    [[nodiscard]] explicit ReadOnlyBinaryStream(const char* data, size_t size);
-    [[nodiscard]] explicit ReadOnlyBinaryStream(const unsigned char* data, size_t size);
+    [[nodiscard]] explicit ReadOnlyBinaryStream(std::vector<uint8_t> const& buffer, bool copyBuffer = false);
+    [[nodiscard]] explicit ReadOnlyBinaryStream(const char* data, size_t size, bool copyBuffer = false);
+    [[nodiscard]] explicit ReadOnlyBinaryStream(const uint8_t* data, size_t size, bool copyBuffer = false);
 
     [[nodiscard]] size_t size() const;
 

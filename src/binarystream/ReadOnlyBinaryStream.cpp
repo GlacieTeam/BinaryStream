@@ -13,11 +13,14 @@ ReadOnlyBinaryStream::ReadOnlyBinaryStream(std::string_view buffer, bool copyBuf
     mHasOverflowed = false;
 }
 
-ReadOnlyBinaryStream::ReadOnlyBinaryStream(const char* data, size_t size)
-: ReadOnlyBinaryStream(std::string(data, size), true) {}
+ReadOnlyBinaryStream::ReadOnlyBinaryStream(std::vector<uint8_t> const& buffer, bool copyBuffer)
+: ReadOnlyBinaryStream(buffer.data(), buffer.size(), copyBuffer) {}
 
-ReadOnlyBinaryStream::ReadOnlyBinaryStream(const unsigned char* data, size_t size)
-: ReadOnlyBinaryStream((const char*)data, size) {}
+ReadOnlyBinaryStream::ReadOnlyBinaryStream(const char* data, size_t size, bool copyBuffer)
+: ReadOnlyBinaryStream(std::string(data, size), copyBuffer) {}
+
+ReadOnlyBinaryStream::ReadOnlyBinaryStream(const uint8_t* data, size_t size, bool copyBuffer)
+: ReadOnlyBinaryStream((const char*)data, size, copyBuffer) {}
 
 template <typename T>
 bool ReadOnlyBinaryStream::read(T* target, bool bigEndian) {
