@@ -4,6 +4,8 @@ A BinaryStream Library written in C++
 
 ## Usage
 ```C++
+using namespace bedrock_protocol;
+
 // Read
 std::string inputBuffer; // Buffer to read
 
@@ -22,7 +24,7 @@ outputStream.writeSignedShort(16384);
 //...
 
 std::string outputBuffer = outputStream.getAndReleaseData();
-
+std::string outputBuffer = outputStream.getAndReleaseData();
 ```
 
 ## Install
