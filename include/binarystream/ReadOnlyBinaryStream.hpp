@@ -52,7 +52,7 @@ public:
 
     bool getBytes(void* target, size_t num);
 
-    [[nodiscard]] uint8_t getByte();
+    [[nodiscard]] std::byte getByte();
 
     [[nodiscard]] uint8_t getUnsignedChar();
 

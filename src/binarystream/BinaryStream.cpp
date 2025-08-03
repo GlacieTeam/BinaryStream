@@ -43,27 +43,27 @@ void BinaryStream::writeBytes(const void* origin, size_t num) {
     mBufferView = mBuffer;
 }
 
-void BinaryStream::writeByte(uint8_t value) { write<>(value); }
+void BinaryStream::writeByte(std::byte value) { write(value); }
 
-void BinaryStream::writeUnsignedChar(uint8_t value) { writeByte(value); }
+void BinaryStream::writeUnsignedChar(uint8_t value) { write(value); }
 
-void BinaryStream::writeUnsignedShort(uint16_t value) { write<>(value); }
+void BinaryStream::writeUnsignedShort(uint16_t value) { write(value); }
 
-void BinaryStream::writeUnsignedInt(uint32_t value) { write<>(value); }
+void BinaryStream::writeUnsignedInt(uint32_t value) { write(value); }
 
-void BinaryStream::writeUnsignedInt64(uint64_t value) { write<>(value); }
+void BinaryStream::writeUnsignedInt64(uint64_t value) { write(value); }
 
-void BinaryStream::writeBool(bool value) { writeByte(value); }
+void BinaryStream::writeBool(bool value) { write(value); }
 
-void BinaryStream::writeDouble(double value) { write<>(value); }
+void BinaryStream::writeDouble(double value) { write(value); }
 
-void BinaryStream::writeFloat(float value) { write<>(value); }
+void BinaryStream::writeFloat(float value) { write(value); }
 
-void BinaryStream::writeSignedInt(int32_t value) { write<>(value); }
+void BinaryStream::writeSignedInt(int32_t value) { write(value); }
 
-void BinaryStream::writeSignedInt64(int64_t value) { write<>(value); }
+void BinaryStream::writeSignedInt64(int64_t value) { write(value); }
 
-void BinaryStream::writeSignedShort(int16_t value) { write<>(value); }
+void BinaryStream::writeSignedShort(int16_t value) { write(value); }
 
 void BinaryStream::writeUnsignedVarInt(uint32_t uvalue) {
     uint8_t next_byte;
@@ -71,7 +71,7 @@ void BinaryStream::writeUnsignedVarInt(uint32_t uvalue) {
         next_byte   = uvalue & 0x7F;
         uvalue    >>= 7;
         if (uvalue) next_byte |= 0x80u;
-        writeByte(next_byte);
+        writeUnsignedChar(next_byte);
     } while (uvalue);
 };
 
@@ -81,7 +81,7 @@ void BinaryStream::writeUnsignedVarInt64(uint64_t uvalue) {
         next_byte   = uvalue & 0x7F;
         uvalue    >>= 7;
         if (uvalue) next_byte |= 0x80u;
-        writeByte(next_byte);
+        writeUnsignedChar(next_byte);
     } while (uvalue);
 };
 
@@ -99,7 +99,7 @@ void BinaryStream::writeVarInt64(int64_t value) {
 
 void BinaryStream::writeNormalizedFloat(float value) { writeVarInt64((int)(value * 2147483647.0)); }
 
-void BinaryStream::writeSignedBigEndianInt(int32_t value) { write<>(value, true); }
+void BinaryStream::writeSignedBigEndianInt(int32_t value) { write(value, true); }
 
 void BinaryStream::writeString(std::string_view value) {
     writeUnsignedVarInt((uint32_t)value.size());
@@ -109,7 +109,7 @@ void BinaryStream::writeString(std::string_view value) {
 
 void BinaryStream::writeUnsignedInt24(uint32_t value) {
     auto* b = reinterpret_cast<unsigned char*>(&value);
-    for (int i = 0; i < 3; i++) write<>(*(b + i));
+    for (int i = 0; i < 3; i++) write(*(b + i));
 }
 
 void BinaryStream::writeRawBytes(std::string_view rawBuffer) {

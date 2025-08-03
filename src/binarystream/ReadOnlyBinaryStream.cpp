@@ -85,61 +85,61 @@ bool ReadOnlyBinaryStream::getBytes(void* target, size_t num) {
     }
 }
 
-uint8_t ReadOnlyBinaryStream::getByte() {
+uint8_t ReadOnlyBinaryStream::getUnsignedChar() {
     uint8_t value = 0;
-    if (read<>(&value)) { return value; }
+    if (read(&value)) { return value; }
     return value;
 }
 
-uint8_t ReadOnlyBinaryStream::getUnsignedChar() { return getByte(); }
+std::byte ReadOnlyBinaryStream::getByte() { return std::byte(getUnsignedChar()); }
 
 uint16_t ReadOnlyBinaryStream::getUnsignedShort() {
     uint16_t value = 0;
-    if (read<>(&value)) { return value; }
+    if (read(&value)) { return value; }
     return value;
 }
 
 uint32_t ReadOnlyBinaryStream::getUnsignedInt() {
     uint32_t value = 0;
-    if (read<>(&value)) { return value; }
+    if (read(&value)) { return value; }
     return value;
 }
 
 uint64_t ReadOnlyBinaryStream::getUnsignedInt64() {
     uint64_t value = 0;
-    if (read<>(&value)) { return value; }
+    if (read(&value)) { return value; }
     return value;
 }
 
-bool ReadOnlyBinaryStream::getBool() { return getByte(); }
+bool ReadOnlyBinaryStream::getBool() { return getUnsignedChar(); }
 
 double ReadOnlyBinaryStream::getDouble() {
     double value = 0;
-    if (read<>(&value)) { return value; }
+    if (read(&value)) { return value; }
     return value;
 }
 
 float ReadOnlyBinaryStream::getFloat() {
     float value = 0;
-    if (read<>(&value)) { return value; }
+    if (read(&value)) { return value; }
     return value;
 }
 
 int32_t ReadOnlyBinaryStream::getSignedInt() {
     int32_t value = 0;
-    if (read<>(&value)) { return value; }
+    if (read(&value)) { return value; }
     return value;
 }
 
 int64_t ReadOnlyBinaryStream::getSignedInt64() {
     int64_t value = 0;
-    if (read<>(&value)) { return value; }
+    if (read(&value)) { return value; }
     return value;
 }
 
 int16_t ReadOnlyBinaryStream::getSignedShort() {
     int16_t value = 0;
-    if (read<>(&value)) { return value; }
+    if (read(&value)) { return value; }
     return value;
 }
 
@@ -186,7 +186,7 @@ float ReadOnlyBinaryStream::getNormalizedFloat() { return (float)getVarInt64() /
 
 int32_t ReadOnlyBinaryStream::getSignedBigEndianInt() {
     int32_t value = 0;
-    if (read<>(&value, true)) { return value; }
+    if (read(&value, true)) { return value; }
     return value;
 }
 
@@ -207,7 +207,7 @@ std::string ReadOnlyBinaryStream::getString() {
 uint32_t ReadOnlyBinaryStream::getUnsignedInt24() {
     uint32_t value = 0;
     auto*    b     = reinterpret_cast<unsigned char*>(&value);
-    for (int i = 0; i < 3; i++) read<>(b + i);
+    for (int i = 0; i < 3; i++) read(b + i);
     return value;
 }
 

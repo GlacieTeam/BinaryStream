@@ -1,12 +1,16 @@
 add_rules("mode.debug", "mode.release")
 
-if is_plat("windows") and not has_config("vs_runtime") then
-    set_runtimes("MD")
+if is_plat("windows") then
+    if not has_config("vs_runtime") then
+        set_runtimes("MD")
+    end
+else
+    set_toolchains("clang")
 end
 
 target("BinaryStream")
     set_kind("static")
-    set_languages("cxx20")
+    set_languages("c++23")
     set_exceptions("none")
     add_includedirs("include")
     add_files("src/**.cpp")
@@ -23,7 +27,7 @@ target("BinaryStream")
             "UNICODE"
         )
         add_cxflags(
-            "/EHa",
+            "/EHsc",
             "/utf-8",
             "/W4"
         )
@@ -34,7 +38,6 @@ target("BinaryStream")
             )
         end
     else
-        set_toolchains("clang")
         add_cxxflags("-Wno-gnu-line-marker")
         add_cxflags(
             "-Wall",

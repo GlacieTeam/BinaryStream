@@ -31,7 +31,7 @@ public:
 
     void writeBytes(const void* origin, size_t num);
 
-    void writeByte(uint8_t value);
+    void writeByte(std::byte value);
 
     void writeUnsignedChar(uint8_t value);
 
