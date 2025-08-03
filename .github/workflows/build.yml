@@ -49,7 +49,7 @@ jobs:
       uses: xmake-io/github-action-setup-xmake@v1
         
     - name: Build BinaryStream (Debug)
-      run: xmake config --mode=debug --toolchain=clang && xmake --all
+      run: xmake config --mode=debug && xmake --all
       
     - name: Build BinaryStream (Release)
-      run: xmake config --mode=release --toolchain=clang && xmake --all
+      run: xmake config --mode=release && xmake --all
