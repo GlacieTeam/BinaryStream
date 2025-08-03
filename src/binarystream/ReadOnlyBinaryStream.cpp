@@ -1,9 +1,8 @@
 // Copyright © 2025 GlacieTeam. All rights reserved.
 //
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this file,
-// You can obtain one at http://mozilla.org/MPL/2.0/.
-// 
+// This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+// distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+//
 // SPDX-License-Identifier: MPL-2.0
 
 #include <binarystream/ReadOnlyBinaryStream.hpp>
@@ -213,9 +212,10 @@ std::string ReadOnlyBinaryStream::getString() {
 }
 
 uint32_t ReadOnlyBinaryStream::getUnsignedInt24() {
-    uint32_t value = 0;
-    auto*    b     = reinterpret_cast<unsigned char*>(&value);
-    for (int i = 0; i < 3; i++) read(b + i);
+    uint32_t value  = 0;
+    value          |= static_cast<uint32_t>(getByte());
+    value          |= (static_cast<uint32_t>(getByte()) << 8);
+    value          |= (static_cast<uint32_t>(getByte()) << 16);
     return value;
 }
 

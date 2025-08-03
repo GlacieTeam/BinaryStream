@@ -1,9 +1,8 @@
 // Copyright © 2025 GlacieTeam. All rights reserved.
 //
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this file,
-// You can obtain one at http://mozilla.org/MPL/2.0/.
-// 
+// This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+// distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+//
 // SPDX-License-Identifier: MPL-2.0
 
 #include <binarystream/BinaryStream.hpp>
@@ -116,8 +115,9 @@ void BinaryStream::writeString(std::string_view value) {
 }
 
 void BinaryStream::writeUnsignedInt24(uint32_t value) {
-    auto* b = reinterpret_cast<unsigned char*>(&value);
-    for (int i = 0; i < 3; i++) write(*(b + i));
+    writeByte(static_cast<std::byte>(value));
+    writeByte(static_cast<std::byte>(value >> 8));
+    writeByte(static_cast<std::byte>(value >> 16));
 }
 
 void BinaryStream::writeRawBytes(std::string_view rawBuffer) {
