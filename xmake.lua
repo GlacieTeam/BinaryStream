@@ -47,7 +47,6 @@ target("BinaryStream")
             )
         end
     else
-        add_cxxflags("-Wno-gnu-line-marker")
         add_cxflags(
             "-Wall",
             "-pedantic",
