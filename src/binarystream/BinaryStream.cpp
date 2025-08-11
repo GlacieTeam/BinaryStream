@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-#include <binarystream/BinaryStream.hpp>
+#include "binarystream/BinaryStream.hpp"
 
 namespace bedrock_protocol {
 
@@ -25,8 +25,6 @@ void BinaryStream::write(T value, bool bigEndian) {
 }
 
 void BinaryStream::reserve(size_t size) { mBuffer.reserve(size); }
-
-size_t BinaryStream::size() const noexcept { return mBuffer.size(); }
 
 void BinaryStream::reset() noexcept {
     mBuffer.clear();

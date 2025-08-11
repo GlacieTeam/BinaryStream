@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-#include <binarystream/ReadOnlyBinaryStream.hpp>
+#include "binarystream/ReadOnlyBinaryStream.hpp"
 
 namespace bedrock_protocol {
 

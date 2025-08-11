@@ -22,8 +22,6 @@ public:
     [[nodiscard]] explicit BinaryStream();
     [[nodiscard]] explicit BinaryStream(std::string& buffer, bool copyBuffer = false);
 
-    [[nodiscard]] size_t size() const noexcept;
-
     void reserve(size_t size);
     void reset() noexcept;
 
