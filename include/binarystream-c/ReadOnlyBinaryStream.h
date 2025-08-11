@@ -5,9 +5,7 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-#ifndef __BREROCK_PROTOCOL_READ_ONLY_BINARY_STREAM_C_H
-#define __BREROCK_PROTOCOL_READ_ONLY_BINARY_STREAM_C_H
-
+#pragma once
 #include <stddef.h>
 #include <stdint.h>
 
@@ -55,6 +53,4 @@ size_t read_only_binary_stream_get_raw_bytes(void* stream, uint8_t* buffer, size
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif
