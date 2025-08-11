@@ -19,40 +19,40 @@ private:
     void write(T value, bool bigEndian = false);
 
 public:
-    [[nodiscard]] explicit BinaryStream();
-    [[nodiscard]] explicit BinaryStream(std::string& buffer, bool copyBuffer = false);
+    [[nodiscard]] BSAPI explicit BinaryStream();
+    [[nodiscard]] BSAPI explicit BinaryStream(std::string& buffer, bool copyBuffer = false);
 
-    void reserve(size_t size);
-    void reset() noexcept;
+    BSAPI void reserve(size_t size);
+    BSAPI void reset() noexcept;
 
-    [[nodiscard]] std::string&       data() noexcept;
-    [[nodiscard]] const std::string& data() const noexcept;
+    [[nodiscard]] BSAPI std::string&       data() noexcept;
+    [[nodiscard]] BSAPI const std::string& data() const noexcept;
 
-    [[nodiscard]] std::string copyBuffer() const;
-    [[nodiscard]] std::string getAndReleaseData();
+    [[nodiscard]] BSAPI std::string copyBuffer() const;
+    [[nodiscard]] BSAPI std::string getAndReleaseData();
 
-    void writeBytes(const void* origin, size_t num);
-    void writeByte(std::byte value);
-    void writeUnsignedChar(uint8_t value);
-    void writeUnsignedShort(uint16_t value);
-    void writeUnsignedInt(uint32_t value);
-    void writeUnsignedInt64(uint64_t value);
-    void writeBool(bool value);
-    void writeDouble(double value);
-    void writeFloat(float value);
-    void writeSignedInt(int32_t value);
-    void writeSignedInt64(int64_t value);
-    void writeSignedShort(int16_t value);
-    void writeUnsignedVarInt(uint32_t uvalue);
-    void writeUnsignedVarInt64(uint64_t uvalue);
-    void writeVarInt(int32_t value);
-    void writeVarInt64(int64_t value);
-    void writeNormalizedFloat(float value);
-    void writeSignedBigEndianInt(int32_t value);
-    void writeString(std::string_view value);
-    void writeUnsignedInt24(uint32_t value);
-    void writeRawBytes(std::string_view rawBuffer);
-    void writeStream(ReadOnlyBinaryStream const& stream);
+    BSAPI void writeBytes(const void* origin, size_t num);
+    BSAPI void writeByte(std::byte value);
+    BSAPI void writeUnsignedChar(uint8_t value);
+    BSAPI void writeUnsignedShort(uint16_t value);
+    BSAPI void writeUnsignedInt(uint32_t value);
+    BSAPI void writeUnsignedInt64(uint64_t value);
+    BSAPI void writeBool(bool value);
+    BSAPI void writeDouble(double value);
+    BSAPI void writeFloat(float value);
+    BSAPI void writeSignedInt(int32_t value);
+    BSAPI void writeSignedInt64(int64_t value);
+    BSAPI void writeSignedShort(int16_t value);
+    BSAPI void writeUnsignedVarInt(uint32_t uvalue);
+    BSAPI void writeUnsignedVarInt64(uint64_t uvalue);
+    BSAPI void writeVarInt(int32_t value);
+    BSAPI void writeVarInt64(int64_t value);
+    BSAPI void writeNormalizedFloat(float value);
+    BSAPI void writeSignedBigEndianInt(int32_t value);
+    BSAPI void writeString(std::string_view value);
+    BSAPI void writeUnsignedInt24(uint32_t value);
+    BSAPI void writeRawBytes(std::string_view rawBuffer);
+    BSAPI void writeStream(ReadOnlyBinaryStream const& stream);
 };
 
 } // namespace bedrock_protocol

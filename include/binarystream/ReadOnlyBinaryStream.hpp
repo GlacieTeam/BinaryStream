@@ -13,6 +13,24 @@
 #include <type_traits>
 #include <vector>
 
+#ifdef _WIN32
+#ifdef BINARY_STREAM_EXPORT
+#define BSAPI __declspec(dllexport)
+#else
+#ifdef BINARY_STREAM_DLL
+#define BSAPI __declspec(dllimport)
+#else
+#define BSAPI
+#endif
+#endif
+#else
+#ifdef BINARY_STREAM_EXPORT
+#define BSAPI __attribute__((visibility("default"), used))
+#else
+#define BSAPI
+#endif
+#endif
+
 namespace bedrock_protocol {
 
 class BinaryStream;
@@ -31,55 +49,55 @@ private:
     bool read(T* target, bool bigEndian = false) noexcept;
 
 public:
-    [[nodiscard]] explicit ReadOnlyBinaryStream(std::string_view buffer, bool copyBuffer = false);
-    [[nodiscard]] explicit ReadOnlyBinaryStream(std::vector<uint8_t> const& buffer, bool copyBuffer = false);
-    [[nodiscard]] explicit ReadOnlyBinaryStream(const char* data, size_t size, bool copyBuffer = false);
-    [[nodiscard]] explicit ReadOnlyBinaryStream(const uint8_t* data, size_t size, bool copyBuffer = false);
+    [[nodiscard]] BSAPI explicit ReadOnlyBinaryStream(std::string_view buffer, bool copyBuffer = false);
+    [[nodiscard]] BSAPI explicit ReadOnlyBinaryStream(std::vector<uint8_t> const& buffer, bool copyBuffer = false);
+    [[nodiscard]] BSAPI explicit ReadOnlyBinaryStream(const char* data, size_t size, bool copyBuffer = false);
+    [[nodiscard]] BSAPI explicit ReadOnlyBinaryStream(const uint8_t* data, size_t size, bool copyBuffer = false);
 
-    [[nodiscard]] size_t size() const noexcept;
-    [[nodiscard]] size_t getPosition() const noexcept;
+    [[nodiscard]] BSAPI size_t size() const noexcept;
+    [[nodiscard]] BSAPI size_t getPosition() const noexcept;
 
-    void setPosition(size_t value) noexcept;
-    void resetPosition() noexcept;
-    void ignoreBytes(size_t length) noexcept;
+    BSAPI void setPosition(size_t value) noexcept;
+    BSAPI void resetPosition() noexcept;
+    BSAPI void ignoreBytes(size_t length) noexcept;
 
-    [[nodiscard]] std::string      getLeftBuffer() const;
-    [[nodiscard]] bool             isOverflowed() const noexcept;
-    [[nodiscard]] bool             hasDataLeft() const noexcept;
-    [[nodiscard]] std::string_view view() const noexcept;
-    [[nodiscard]] std::string      copyData() const;
-    [[nodiscard]] bool             operator==(ReadOnlyBinaryStream const&) const noexcept;
+    [[nodiscard]] BSAPI std::string getLeftBuffer() const;
+    [[nodiscard]] BSAPI bool        isOverflowed() const noexcept;
+    [[nodiscard]] BSAPI bool        hasDataLeft() const noexcept;
+    [[nodiscard]] BSAPI std::string_view view() const noexcept;
+    [[nodiscard]] BSAPI std::string copyData() const;
+    [[nodiscard]] BSAPI bool        operator==(ReadOnlyBinaryStream const&) const noexcept;
 
-    bool                    getBytes(void* target, size_t num) noexcept;
-    [[nodiscard]] std::byte getByte() noexcept;
-    [[nodiscard]] uint8_t   getUnsignedChar() noexcept;
-    [[nodiscard]] uint16_t  getUnsignedShort() noexcept;
-    [[nodiscard]] uint32_t  getUnsignedInt() noexcept;
-    [[nodiscard]] uint64_t  getUnsignedInt64() noexcept;
-    [[nodiscard]] bool      getBool() noexcept;
-    [[nodiscard]] double    getDouble() noexcept;
-    [[nodiscard]] float     getFloat() noexcept;
-    [[nodiscard]] int32_t   getSignedInt() noexcept;
-    [[nodiscard]] int64_t   getSignedInt64() noexcept;
-    [[nodiscard]] int16_t   getSignedShort() noexcept;
-    [[nodiscard]] uint32_t  getUnsignedVarInt() noexcept;
-    [[nodiscard]] uint64_t  getUnsignedVarInt64() noexcept;
-    [[nodiscard]] int32_t   getVarInt() noexcept;
-    [[nodiscard]] int64_t   getVarInt64() noexcept;
-    [[nodiscard]] float     getNormalizedFloat() noexcept;
-    [[nodiscard]] int32_t   getSignedBigEndianInt() noexcept;
-    [[nodiscard]] uint32_t  getUnsignedInt24() noexcept;
+    BSAPI bool          getBytes(void* target, size_t num) noexcept;
+    [[nodiscard]] BSAPI std::byte getByte() noexcept;
+    [[nodiscard]] BSAPI uint8_t   getUnsignedChar() noexcept;
+    [[nodiscard]] BSAPI uint16_t  getUnsignedShort() noexcept;
+    [[nodiscard]] BSAPI uint32_t  getUnsignedInt() noexcept;
+    [[nodiscard]] BSAPI uint64_t  getUnsignedInt64() noexcept;
+    [[nodiscard]] BSAPI bool      getBool() noexcept;
+    [[nodiscard]] BSAPI double    getDouble() noexcept;
+    [[nodiscard]] BSAPI float     getFloat() noexcept;
+    [[nodiscard]] BSAPI int32_t   getSignedInt() noexcept;
+    [[nodiscard]] BSAPI int64_t   getSignedInt64() noexcept;
+    [[nodiscard]] BSAPI int16_t   getSignedShort() noexcept;
+    [[nodiscard]] BSAPI uint32_t  getUnsignedVarInt() noexcept;
+    [[nodiscard]] BSAPI uint64_t  getUnsignedVarInt64() noexcept;
+    [[nodiscard]] BSAPI int32_t   getVarInt() noexcept;
+    [[nodiscard]] BSAPI int64_t   getVarInt64() noexcept;
+    [[nodiscard]] BSAPI float     getNormalizedFloat() noexcept;
+    [[nodiscard]] BSAPI int32_t   getSignedBigEndianInt() noexcept;
+    [[nodiscard]] BSAPI uint32_t  getUnsignedInt24() noexcept;
 
-    void                      getString(std::string& outString);
-    [[nodiscard]] std::string getString();
-    void                      getRawBytes(std::string& rawBuffer, size_t length);
-    [[nodiscard]] std::string getRawBytes(size_t length);
+    BSAPI void          getString(std::string& outString);
+    [[nodiscard]] BSAPI std::string getString();
+    BSAPI void                      getRawBytes(std::string& rawBuffer, size_t length);
+    [[nodiscard]] BSAPI std::string getRawBytes(size_t length);
 };
 
 namespace detail {
 template <typename T>
     requires std::is_trivially_copyable_v<T>
-constexpr T swapEndian(T u) noexcept {
+[[nodiscard]] constexpr T swapEndian(T u) noexcept {
     if constexpr (sizeof(T) == 1) {
         return u;
     } else {
