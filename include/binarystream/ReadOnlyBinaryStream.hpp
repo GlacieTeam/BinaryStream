@@ -8,6 +8,7 @@
 #pragma once
 #include <algorithm>
 #include <array>
+#include <bit>
 #include <cstdint>
 #include <string>
 #include <type_traits>
@@ -106,17 +107,13 @@ public:
 
 namespace detail {
 template <typename T>
-    requires std::is_trivially_copyable_v<T>
-T swapEndian(T u) noexcept {
+constexpr T swapEndian(T u) noexcept {
     if constexpr (sizeof(T) == 1) {
         return u;
     } else {
-        std::array<uint8_t, sizeof(T)> bytes;
-        std::memcpy(bytes.data(), &u, sizeof(T));
+        std::array<uint8_t, sizeof(T)> bytes = std::bit_cast<decltype(bytes)>(u);
         std::reverse(bytes.begin(), bytes.end());
-        T result;
-        std::memcpy(&result, bytes.data(), sizeof(T));
-        return result;
+        return std::bit_cast<T>(bytes);
     }
 }
 } // namespace detail
