@@ -1,13 +1,8 @@
 on:
-  push:
-    paths:
-      - .github/workflows/build.yml
-      - src/**
-      - include/**
-      - xmake.lua
-  pull_request:
-  workflow_dispatch:
-
+  release:
+    types:
+      - published
+  
 jobs:
   build-windows:
     name: Build on Windows (MSVC)
@@ -23,18 +18,12 @@ jobs:
         
     - name: Install xmake
       uses: xmake-io/github-action-setup-xmake@v1
-        
-    - name: Build BinaryStream Static (Debug)
-      run: xmake config --mode=debug --kind=static && xmake --all
-
-    - name: Build BinaryStream Shared (Debug)
-      run: xmake config --mode=debug --kind=shared && xmake --all
       
     - name: Build BinaryStream Static (Release)
-      run: xmake config --mode=release --kind=static && xmake --all
+      run: xmake config --mode=release && xmake --all
 
     - name: Build BinaryStream Shared (Release)
-      run: xmake config --mode=release --kind=shared && xmake --all
+      run: xmake config --mode=release --libtype=shared && xmake --all
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
@@ -60,18 +49,12 @@ jobs:
       
     - name: Install xmake
       uses: xmake-io/github-action-setup-xmake@v1
-        
-    - name: Build BinaryStream Static (Debug)
-      run: xmake config --mode=debug --kind=static && xmake --all
-
-    - name: Build BinaryStream Shared (Debug)
-      run: xmake config --mode=debug --kind=shared && xmake --all
       
     - name: Build BinaryStream Static (Release)
-      run: xmake config --mode=release --kind=static && xmake --all
+      run: xmake config --mode=release --toolchain=clang && xmake --all
 
     - name: Build BinaryStream Shared (Release)
-      run: xmake config --mode=release --kind=shared && xmake --all
+      run:  xmake config --mode=release --libtype=shared --toolchain=clang && xmake --all
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
@@ -79,3 +62,30 @@ jobs:
         name: BinaryStream-linux-x86_64-${{ github.sha }}
         path: |
           bin/
+
+  upload-to-release:
+    name: Publish Release
+    needs:
+      - build-windows
+      - build-linux
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: BinaryStream-windows-x86_64-${{ github.sha }}
+          path: artifact
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: BinaryStream-linux-x86_64-${{ github.sha }}
+          path: artifact
+
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            artifact/BinaryStream.dll
+            artifact/libBinaryStream.so
