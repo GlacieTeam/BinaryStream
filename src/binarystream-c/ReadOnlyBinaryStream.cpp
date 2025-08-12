@@ -95,6 +95,11 @@ int16_t read_only_binary_stream_get_signed_short(void* stream) {
     return to_robs(stream)->getSignedShort();
 }
 
+uint32_t read_only_binary_stream_get_unsigned_int24(void* stream) {
+    if (!stream) return 0;
+    return to_robs(stream)->getUnsignedInt24();
+}
+
 uint32_t read_only_binary_stream_get_unsigned_int(void* stream) {
     if (!stream) return 0;
     return to_robs(stream)->getUnsignedInt();

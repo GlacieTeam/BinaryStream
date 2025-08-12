@@ -26,7 +26,7 @@ void* binary_stream_create() {
 
 void* binary_stream_create_with_buffer(const uint8_t* data, size_t size, bool copy_data) {
     try {
-        if (data && size > 0) {
+        if (data) {
             std::string buffer(reinterpret_cast<const char*>(data), size);
             return new bedrock_protocol::BinaryStream(buffer, copy_data);
         } else {
@@ -53,6 +53,14 @@ void binary_stream_write_unsigned_char(void* stream, uint8_t value) {
 
 void binary_stream_write_unsigned_short(void* stream, uint16_t value) {
     if (stream) to_bs(stream)->writeUnsignedShort(value);
+}
+
+void binary_stream_write_signed_short(void* stream, int16_t value) {
+    if (stream) to_bs(stream)->writeSignedShort(value);
+}
+
+void binary_stream_write_unsigned_int24(void* stream, uint32_t value) {
+    if (stream) to_bs(stream)->writeUnsignedInt24(value);
 }
 
 void binary_stream_write_unsigned_int(void* stream, uint32_t value) {
@@ -99,6 +107,10 @@ void binary_stream_write_string(void* stream, const char* str, size_t length) {
     if (stream && str && length > 0) { to_bs(stream)->writeString(std::string_view(str, length)); }
 }
 
+void binary_stream_write_signed_big_endian_int(void* stream, int32_t value) {
+    if (stream) to_bs(stream)->writeSignedBigEndianInt(value);
+}
+
 void binary_stream_reset(void* stream) {
     if (stream) to_bs(stream)->reset();
 }
@@ -108,7 +120,10 @@ size_t binary_stream_get_buffer_size(void* stream) {
     return 0;
 }
 void binary_stream_get_buffer_data(void* stream, uint8_t* buffer) {
-    if (stream && buffer) { buffer = reinterpret_cast<uint8_t*>(to_bs(stream)->data().data()); }
+    if (stream && buffer) {
+        auto str = to_bs(stream)->data();
+        std::memcpy(buffer, str.data(), str.size());
+    }
 }
 
 } // extern "C"

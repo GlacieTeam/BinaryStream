@@ -34,17 +34,14 @@ extern "C" {
 
 BSAPI void* read_only_binary_stream_create(const uint8_t* data, size_t size, bool copy_data);
 BSAPI void* read_only_binary_stream_create_empty();
-
-BSAPI void read_only_binary_stream_destroy(void* stream);
+BSAPI void  read_only_binary_stream_destroy(void* stream);
 
 BSAPI size_t read_only_binary_stream_size(void* stream);
 BSAPI size_t read_only_binary_stream_get_position(void* stream);
-
-BSAPI void read_only_binary_stream_set_position(void* stream, size_t position);
-BSAPI void read_only_binary_stream_reset_position(void* stream);
-
-BSAPI bool read_only_binary_stream_overflowed(void* stream);
-BSAPI bool read_only_binary_stream_has_data_left(void* stream);
+BSAPI void   read_only_binary_stream_set_position(void* stream, size_t position);
+BSAPI void   read_only_binary_stream_reset_position(void* stream);
+BSAPI bool   read_only_binary_stream_overflowed(void* stream);
+BSAPI bool   read_only_binary_stream_has_data_left(void* stream);
 
 BSAPI void read_only_binary_stream_ignore_bytes(void* stream, size_t length);
 
@@ -53,6 +50,7 @@ BSAPI bool     read_only_binary_stream_get_bool(void* stream);
 BSAPI uint8_t  read_only_binary_stream_get_unsigned_char(void* stream);
 BSAPI uint16_t read_only_binary_stream_get_unsigned_short(void* stream);
 BSAPI int16_t  read_only_binary_stream_get_signed_short(void* stream);
+BSAPI uint32_t read_only_binary_stream_get_unsigned_int24(void* stream);
 BSAPI uint32_t read_only_binary_stream_get_unsigned_int(void* stream);
 BSAPI int32_t  read_only_binary_stream_get_signed_int(void* stream);
 BSAPI uint64_t read_only_binary_stream_get_unsigned_int64(void* stream);

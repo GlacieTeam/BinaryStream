@@ -25,7 +25,7 @@ public:
     BSAPI void reserve(size_t size);
     BSAPI void reset() noexcept;
 
-    [[nodiscard]] BSAPI std::string&       data() noexcept;
+    [[nodiscard]] BSAPI std::string& data() noexcept;
     [[nodiscard]] BSAPI const std::string& data() const noexcept;
 
     [[nodiscard]] BSAPI std::string copyBuffer() const;
