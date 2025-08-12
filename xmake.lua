@@ -67,6 +67,7 @@ target("BinaryStream")
                 "-fvisibility=hidden",
                 "-fvisibility-inlines-hidden"
             )
+            add_syslinks("c++")
         end
     end
     if is_config("kind", "shared") then
