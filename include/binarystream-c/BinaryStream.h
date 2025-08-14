@@ -12,32 +12,32 @@
 extern "C" {
 #endif
 
-BSAPI void* binary_stream_create();
-BSAPI void* binary_stream_create_with_buffer(const uint8_t* data, size_t size, bool copy_data);
-BSAPI void  binary_stream_destroy(void* stream);
-BSAPI void  binary_stream_reset(void* stream);
+BINARY_STREAM_API void* binary_stream_create();
+BINARY_STREAM_API void* binary_stream_create_with_buffer(const uint8_t* data, size_t size, bool copy_data);
+BINARY_STREAM_API void  binary_stream_destroy(void* stream);
+BINARY_STREAM_API void  binary_stream_reset(void* stream);
 
-BSAPI void binary_stream_write_bytes(void* stream, const uint8_t* data, size_t size);
-BSAPI void binary_stream_write_bool(void* stream, bool value);
-BSAPI void binary_stream_write_unsigned_char(void* stream, uint8_t value);
-BSAPI void binary_stream_write_unsigned_short(void* stream, uint16_t value);
-BSAPI void binary_stream_write_signed_short(void* stream, int16_t value);
-BSAPI void binary_stream_write_unsigned_int24(void* stream, uint32_t value);
-BSAPI void binary_stream_write_unsigned_int(void* stream, uint32_t value);
-BSAPI void binary_stream_write_signed_int(void* stream, int32_t value);
-BSAPI void binary_stream_write_unsigned_int64(void* stream, uint64_t value);
-BSAPI void binary_stream_write_signed_int64(void* stream, int64_t value);
-BSAPI void binary_stream_write_float(void* stream, float value);
-BSAPI void binary_stream_write_double(void* stream, double value);
-BSAPI void binary_stream_write_unsigned_varint(void* stream, uint32_t value);
-BSAPI void binary_stream_write_varint(void* stream, int32_t value);
-BSAPI void binary_stream_write_unsigned_varint64(void* stream, uint64_t value);
-BSAPI void binary_stream_write_varint64(void* stream, int64_t value);
-BSAPI void binary_stream_write_string(void* stream, const char* str, size_t length);
-BSAPI void binary_stream_write_signed_big_endian_int(void* stream, int32_t value);
+BINARY_STREAM_API void binary_stream_write_bytes(void* stream, const uint8_t* data, size_t size);
+BINARY_STREAM_API void binary_stream_write_bool(void* stream, bool value);
+BINARY_STREAM_API void binary_stream_write_unsigned_char(void* stream, uint8_t value);
+BINARY_STREAM_API void binary_stream_write_unsigned_short(void* stream, uint16_t value);
+BINARY_STREAM_API void binary_stream_write_signed_short(void* stream, int16_t value);
+BINARY_STREAM_API void binary_stream_write_unsigned_int24(void* stream, uint32_t value);
+BINARY_STREAM_API void binary_stream_write_unsigned_int(void* stream, uint32_t value);
+BINARY_STREAM_API void binary_stream_write_signed_int(void* stream, int32_t value);
+BINARY_STREAM_API void binary_stream_write_unsigned_int64(void* stream, uint64_t value);
+BINARY_STREAM_API void binary_stream_write_signed_int64(void* stream, int64_t value);
+BINARY_STREAM_API void binary_stream_write_float(void* stream, float value);
+BINARY_STREAM_API void binary_stream_write_double(void* stream, double value);
+BINARY_STREAM_API void binary_stream_write_unsigned_varint(void* stream, uint32_t value);
+BINARY_STREAM_API void binary_stream_write_varint(void* stream, int32_t value);
+BINARY_STREAM_API void binary_stream_write_unsigned_varint64(void* stream, uint64_t value);
+BINARY_STREAM_API void binary_stream_write_varint64(void* stream, int64_t value);
+BINARY_STREAM_API void binary_stream_write_string(void* stream, const char* str, size_t length);
+BINARY_STREAM_API void binary_stream_write_signed_big_endian_int(void* stream, int32_t value);
 
-BSAPI size_t binary_stream_get_buffer_size(void* stream);
-BSAPI void   binary_stream_get_buffer_data(void* stream, uint8_t* buffer);
+BINARY_STREAM_API size_t binary_stream_get_buffer_size(void* stream);
+BINARY_STREAM_API void   binary_stream_get_buffer_data(void* stream, uint8_t* buffer);
 
 #ifdef __cplusplus
 }
