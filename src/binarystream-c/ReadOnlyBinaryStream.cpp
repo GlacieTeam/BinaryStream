@@ -86,6 +86,7 @@ stream_buffer read_only_binary_stream_get_left_buffer(void* stream) {
         stream_buffer result;
         result.data = reinterpret_cast<uint8_t*>(data);
         result.size = buf.size();
+        return result;
     }
     return stream_buffer();
 }
@@ -185,6 +186,7 @@ stream_buffer read_only_binary_stream_get_string(void* stream) {
         stream_buffer result;
         result.data = reinterpret_cast<uint8_t*>(data);
         result.size = buf.size();
+        return result;
     }
     return stream_buffer();
 }

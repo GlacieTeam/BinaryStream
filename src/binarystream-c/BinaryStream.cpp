@@ -123,6 +123,7 @@ stream_buffer binary_stream_get_buffer(void* stream) {
         stream_buffer result;
         result.data = reinterpret_cast<uint8_t*>(data);
         result.size = buf.size();
+        return result;
     }
     return stream_buffer();
 }
