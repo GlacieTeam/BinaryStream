@@ -18,6 +18,14 @@ inline bedrock_protocol::ReadOnlyBinaryStream* to_robs(void* handle) {
 
 extern "C" {
 
+void stream_buffer_destroy(stream_buffer* buffer) {
+    if (buffer && buffer->data) {
+        delete[] buffer->data;
+        buffer->data = nullptr;
+        buffer->size = 0;
+    }
+}
+
 void* read_only_binary_stream_create(const uint8_t* data, size_t size, bool copy_data) {
     try {
         if (data && size > 0) {
@@ -68,6 +76,18 @@ bool read_only_binary_stream_overflowed(void* stream) {
 bool read_only_binary_stream_has_data_left(void* stream) {
     if (!stream) return false;
     return to_robs(stream)->hasDataLeft();
+}
+
+stream_buffer read_only_binary_stream_get_left_buffer(void* stream) {
+    if (stream) {
+        auto  buf  = to_robs(stream)->getLeftBuffer();
+        char* data = new char[buf.size()];
+        std::memcpy(data, buf.data(), buf.size());
+        stream_buffer result;
+        result.data = reinterpret_cast<uint8_t*>(data);
+        result.size = buf.size();
+    }
+    return stream_buffer();
 }
 
 size_t read_only_binary_stream_get_bytes(void* stream, uint8_t* buffer, size_t buffer_size) {
@@ -157,13 +177,16 @@ int32_t read_only_binary_stream_get_signed_big_endian_int(void* stream) {
     return to_robs(stream)->getSignedBigEndianInt();
 }
 
-size_t read_only_binary_stream_get_string_size(void* stream) {
-    if (stream) { return to_robs(stream)->getUnsignedVarInt(); }
-    return 0;
-}
-
-void read_only_binary_stream_get_string_data(void* stream, char* buffer, size_t buffer_size) {
-    if (stream && buffer) { to_robs(stream)->getBytes(buffer, buffer_size); }
+stream_buffer read_only_binary_stream_get_string(void* stream) {
+    if (stream) {
+        auto  buf  = to_robs(stream)->getString();
+        char* data = new char[buf.size()];
+        std::memcpy(data, buf.data(), buf.size());
+        stream_buffer result;
+        result.data = reinterpret_cast<uint8_t*>(data);
+        result.size = buf.size();
+    }
+    return stream_buffer();
 }
 
 size_t read_only_binary_stream_get_raw_bytes(void* stream, uint8_t* buffer, size_t length) {

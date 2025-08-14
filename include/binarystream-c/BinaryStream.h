@@ -36,8 +36,7 @@ BINARY_STREAM_API void binary_stream_write_varint64(void* stream, int64_t value)
 BINARY_STREAM_API void binary_stream_write_string(void* stream, const char* str, size_t length);
 BINARY_STREAM_API void binary_stream_write_signed_big_endian_int(void* stream, int32_t value);
 
-BINARY_STREAM_API size_t binary_stream_get_buffer_size(void* stream);
-BINARY_STREAM_API void   binary_stream_get_buffer_data(void* stream, uint8_t* buffer);
+BINARY_STREAM_API stream_buffer binary_stream_get_buffer(void* stream);
 
 #ifdef __cplusplus
 }

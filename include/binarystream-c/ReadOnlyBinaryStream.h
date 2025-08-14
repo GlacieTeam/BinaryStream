@@ -23,6 +23,12 @@
 extern "C" {
 #endif
 
+struct stream_buffer {
+    uint8_t* data;
+    size_t   size;
+};
+BINARY_STREAM_API void stream_buffer_destroy(stream_buffer* buffer);
+
 BINARY_STREAM_API void* read_only_binary_stream_create(const uint8_t* data, size_t size, bool copy_data);
 BINARY_STREAM_API void* read_only_binary_stream_create_empty();
 BINARY_STREAM_API void  read_only_binary_stream_destroy(void* stream);
@@ -33,6 +39,8 @@ BINARY_STREAM_API void   read_only_binary_stream_set_position(void* stream, size
 BINARY_STREAM_API void   read_only_binary_stream_reset_position(void* stream);
 BINARY_STREAM_API bool   read_only_binary_stream_overflowed(void* stream);
 BINARY_STREAM_API bool   read_only_binary_stream_has_data_left(void* stream);
+
+BINARY_STREAM_API stream_buffer read_only_binary_stream_get_left_buffer(void* stream);
 
 BINARY_STREAM_API void read_only_binary_stream_ignore_bytes(void* stream, size_t length);
 
@@ -54,8 +62,7 @@ BINARY_STREAM_API uint64_t read_only_binary_stream_get_unsigned_varint64(void* s
 BINARY_STREAM_API int64_t  read_only_binary_stream_get_varint64(void* stream);
 BINARY_STREAM_API int32_t  read_only_binary_stream_get_signed_big_endian_int(void* stream);
 
-BINARY_STREAM_API size_t read_only_binary_stream_get_string_size(void* stream);
-BINARY_STREAM_API void   read_only_binary_stream_get_string_data(void* stream, char* buffer, size_t buffer_size);
+BINARY_STREAM_API stream_buffer read_only_binary_stream_get_string(void* stream);
 
 BINARY_STREAM_API size_t read_only_binary_stream_get_raw_bytes(void* stream, uint8_t* buffer, size_t length);
 

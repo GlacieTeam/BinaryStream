@@ -115,15 +115,16 @@ void binary_stream_reset(void* stream) {
     if (stream) to_bs(stream)->reset();
 }
 
-size_t binary_stream_get_buffer_size(void* stream) {
-    if (stream) { return to_bs(stream)->data().size(); }
-    return 0;
-}
-void binary_stream_get_buffer_data(void* stream, uint8_t* buffer) {
-    if (stream && buffer) {
-        auto str = to_bs(stream)->data();
-        std::memcpy(buffer, str.data(), str.size());
+stream_buffer binary_stream_get_buffer(void* stream) {
+    if (stream) {
+        auto  buf  = to_bs(stream)->data();
+        char* data = new char[buf.size()];
+        std::memcpy(data, buf.data(), buf.size());
+        stream_buffer result;
+        result.data = reinterpret_cast<uint8_t*>(data);
+        result.size = buf.size();
     }
+    return stream_buffer();
 }
 
 } // extern "C"
