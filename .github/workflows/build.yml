@@ -41,7 +41,7 @@ jobs:
       with:
         name: BinaryStream-Windows-${{ github.sha }}
         path: |
-          bin/
+          artifacts/
 
   build-linux:
     name: Build on Linux (Clang)
@@ -76,7 +76,7 @@ jobs:
       with:
         name: BinaryStream-Linux-${{ github.sha }}
         path: |
-          bin/
+          artifacts/
 
   build-macos:
     name: Build on MacOS (Clang)
@@ -108,4 +108,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: BinaryStream-MacOS-${{ github.sha }}
-        path: bin/
+        path: artifacts/

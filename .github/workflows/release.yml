@@ -100,17 +100,17 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: BinaryStream-windows-x64-${{ github.sha }}
+          name: BinaryStream-Windows-${{ github.sha }}
           path: artifact
 
       - uses: actions/download-artifact@v4
         with:
-          name: BinaryStream-linux-x86_64-${{ github.sha }}
+          name: BinaryStream-Linux-${{ github.sha }}
           path: artifact
 
       - uses: actions/download-artifact@v4
         with:
-          name: BinaryStream-macos-arm64-${{ github.sha }}
+          name: BinaryStream-MacOS-${{ github.sha }}
           path: artifact
 
       - uses: softprops/action-gh-release@v1
