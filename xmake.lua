@@ -81,8 +81,9 @@ target("BinaryStream")
             local target_file = target:targetfile()
             local filename = path.filename(target_file)
             local output_dir = path.join(os.projectdir(), "bin/BinaryStream-" .. plat .. "-" .. arch)
-            os.rm(output_dir)
             os.mkdir(output_dir)
+            local artifact_dir = path.join(os.projectdir(), "artifacts")
+            os.mkdir(artifact_dir)
             os.cp(target_file, output_dir)
             if plat == "macosx" then
                 os.run("install_name_tool -id @rpath/" .. filename .. " " .. path.join(output_dir, filename))
@@ -101,6 +102,7 @@ target("BinaryStream")
             else
                 os.exec("zip -rj -q '%s' '%s'", zip_file, output_dir)
             end
+            os.mv(zip_file, artifact_dir)
             cprint("${bright green}[Shared Library]: ${reset}".. filename .. " already generated to " .. output_dir)
         end)
     end
