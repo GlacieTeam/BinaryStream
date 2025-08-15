@@ -85,7 +85,7 @@ target("BinaryStream")
             os.mkdir(output_dir)
             os.cp(target_file, output_dir)
             if plat == "macosx" then
-                os.run("install_name_tool -id @rpath/" .. filename .. " " .. output_dir)
+                os.run("install_name_tool -id @rpath/" .. filename .. " " .. path.join(output_dir, filename))
             end
             local zip_file = path.join(os.projectdir(), "bin/BinaryStream-" .. plat .. "-" .. arch .. ".zip")
             os.rm(zip_file)
