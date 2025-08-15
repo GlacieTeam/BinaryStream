@@ -67,7 +67,11 @@ target("BinaryStream")
                 "-fvisibility=hidden",
                 "-fvisibility-inlines-hidden"
             )
-            add_syslinks("c++")
+            if is_plat("linux") then
+                add_syslinks("c++")
+            else
+                add_ldflags("-dynamiclib")
+            end
         end
     end
     if is_config("kind", "shared") then
@@ -75,6 +79,9 @@ target("BinaryStream")
             local output_dir = path.join(os.projectdir(), "bin")
             os.mkdir(output_dir)
             os.cp(target:targetfile(), path.join(output_dir, path.filename(target:targetfile())))
+            if os.host() == "macosx" then
+                os.run("install_name_tool -id @rpath/" .. filename .. " " .. output_path)
+            end
             cprint("${bright green}[Shared Library]: ${reset}".. path.filename(target:targetfile()) .. " already generated to " .. output_dir)
         end)
     end
