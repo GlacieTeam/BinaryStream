@@ -61,6 +61,32 @@ jobs:
         path: |
           bin/
 
+  build-macos:
+    name: Build on MacOS (Clang)
+    runs-on: macos-14
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Ensure Command Line Tools
+      run: |
+        xcode-select --install 2>/dev/null || true
+
+    - name: Install xmake
+      uses: xmake-io/github-action-setup-xmake@v1
+
+    - name: Build BinaryStream Static (Release)
+      run: xmake config --mode=release --kind=static && xmake --all
+
+    - name: Build BinaryStream Shared (Release)
+      run: xmake config --mode=release --kind=shared && xmake --all
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: BinaryStream-macos-arm64-${{ github.sha }}
+        path: bin/
+
   upload-to-release:
     name: Publish Release
     needs:
@@ -74,7 +100,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: BinaryStream-windows-x86_64-${{ github.sha }}
+          name: BinaryStream-windows-x64-${{ github.sha }}
           path: artifact
 
       - uses: actions/download-artifact@v4
@@ -82,8 +108,12 @@ jobs:
           name: BinaryStream-linux-x86_64-${{ github.sha }}
           path: artifact
 
+      - uses: actions/download-artifact@v4
+        with:
+          name: BinaryStream-macos-arm64-${{ github.sha }}
+          path: artifact
+
       - uses: softprops/action-gh-release@v1
         with:
           files: |
-            artifact/BinaryStream.dll
-            artifact/libBinaryStream.so
+            artifact/*

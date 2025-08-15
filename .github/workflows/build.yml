@@ -39,13 +39,13 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: BinaryStream-windows-${{ runner.arch }}-${{ github.sha }}
+        name: BinaryStream-windows-x64-${{ github.sha }}
         path: |
           bin/
 
   build-linux:
     name: Build on Linux (Clang)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -74,13 +74,13 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: BinaryStream-linux-${{ runner.arch }}-${{ github.sha }}
+        name: BinaryStream-linux-x86_64-${{ github.sha }}
         path: |
           bin/
 
   build-macos:
     name: Build on MacOS (Clang)
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -107,5 +107,5 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: BinaryStream-macos-${{ runner.arch }}-${{ github.sha }}
+        name: BinaryStream-macos-arm64-${{ github.sha }}
         path: bin/

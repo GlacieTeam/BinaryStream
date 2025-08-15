@@ -76,14 +76,30 @@ target("BinaryStream")
     end
     if is_config("kind", "shared") then
         after_build(function (target)
-            local output_dir = path.join(os.projectdir(), "bin")
-            os.mkdir(output_dir)
+            local plat = os.host()
+            local arch = os.arch()
             local target_file = target:targetfile()
             local filename = path.filename(target_file)
-            local output_path = path.join(output_dir, filename)
-            os.cp(target_file, output_path)
-            if os.host() == "macosx" then
-                os.run("install_name_tool -id @rpath/" .. filename .. " " .. output_path)
+            local output_dir = path.join(os.projectdir(), "bin/BinaryStream-" .. plat .. "-" .. arch)
+            os.rm(output_dir)
+            os.mkdir(output_dir)
+            os.cp(target_file, output_dir)
+            if plat == "macosx" then
+                os.run("install_name_tool -id @rpath/" .. filename .. " " .. output_dir)
+            end
+            local zip_file = path.join(os.projectdir(), "bin/BinaryStream-" .. plat .. "-" .. arch .. ".zip")
+            os.rm(zip_file)
+            if plat == "windows" then
+                local win_src = output_dir:gsub("/", "\\")
+                local win_dest = zip_file:gsub("/", "\\")
+                local command = string.format(
+                    'powershell -Command "Compress-Archive -Path \'%s\\*\' -DestinationPath \'%s\'"',
+                    win_src,
+                    win_dest
+                )
+                os.exec(command)
+            else
+                os.exec("zip -rj -q '%s' '%s'", zip_file, output_dir)
             end
             cprint("${bright green}[Shared Library]: ${reset}".. filename .. " already generated to " .. output_dir)
         end)
