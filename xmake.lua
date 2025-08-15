@@ -78,10 +78,13 @@ target("BinaryStream")
         after_build(function (target)
             local output_dir = path.join(os.projectdir(), "bin")
             os.mkdir(output_dir)
-            os.cp(target:targetfile(), path.join(output_dir, path.filename(target:targetfile())))
+            local target_file = target:targetfile()
+            local filename = path.filename(target_file)
+            local output_path = path.join(output_dir, filename)
+            os.cp(target_file, output_path)
             if os.host() == "macosx" then
                 os.run("install_name_tool -id @rpath/" .. filename .. " " .. output_path)
             end
-            cprint("${bright green}[Shared Library]: ${reset}".. path.filename(target:targetfile()) .. " already generated to " .. output_dir)
+            cprint("${bright green}[Shared Library]: ${reset}".. filename .. " already generated to " .. output_dir)
         end)
     end
