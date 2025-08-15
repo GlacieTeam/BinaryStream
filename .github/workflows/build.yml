@@ -39,7 +39,7 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: BinaryStream-windows-x64-${{ github.sha }}
+        name: BinaryStream-Windows-${{ github.sha }}
         path: |
           bin/
 
@@ -74,7 +74,7 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: BinaryStream-linux-x86_64-${{ github.sha }}
+        name: BinaryStream-Linux-${{ github.sha }}
         path: |
           bin/
 
