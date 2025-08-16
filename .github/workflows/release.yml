@@ -99,19 +99,27 @@ jobs:
 
   build-linux-arm64:
     name: Build on Linux ARM64 (Clang)
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
+    container:
+      image: ubuntu:20.04
+      options: --privileged
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      
+
     - name: Setup Clang 18
       run: |
+        ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
+        echo "Etc/UTC" > /etc/timezone
+        apt-get update -y
+        DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+        apt-get install -y wget gnupg build-essential lsb-release software-properties-common zip git
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
-        sudo ./llvm.sh 18
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
-        sudo tee /etc/apt/sources.list << 'EOF'
+        ./llvm.sh 18
+        update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100
+        update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
+        tee /etc/apt/sources.list << 'EOF'
         deb [arch=amd64] http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
         deb [arch=amd64] http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
         deb [arch=amd64] http://archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
@@ -121,18 +129,18 @@ jobs:
         deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy-backports main restricted universe multiverse
         deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy-security main restricted universe multiverse
         EOF
-        sudo dpkg --add-architecture arm64
-        sudo apt update
-        sudo apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu libc++-18-dev:arm64 libc++abi-18-dev:arm64
+        dpkg --add-architecture arm64
+        apt-get update -y
+        apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu libc++-18-dev:arm64 libc++abi-18-dev:arm64
       
     - name: Install xmake
       uses: xmake-io/github-action-setup-xmake@v1
 
     - name: Build BinaryStream Static (Release)
-      run: xmake f --mode=release --kind=static --arch=arm64 --sdk=/usr/aarch64-linux-gnu --bin=/usr/bin --cxflags="-target aarch64-linux-gnu" --shflags="-target aarch64-linux-gnu -fuse-ld=lld" && xmake --all
+      run: xmake f --mode=release --kind=static --arch=arm64 --sdk=/usr/aarch64-linux-gnu --bin=/usr/bin --cxflags="-target aarch64-linux-gnu" --shflags="-target aarch64-linux-gnu -fuse-ld=lld" --root && xmake --all --root
 
     - name: Build BinaryStream Shared (Release)
-      run: xmake f --mode=release --kind=shared --arch=arm64 --sdk=/usr/aarch64-linux-gnu --bin=/usr/bin --cxflags="-target aarch64-linux-gnu" --shflags="-target aarch64-linux-gnu -fuse-ld=lld" && xmake --all
+      run: xmake f --mode=release --kind=shared --arch=arm64 --sdk=/usr/aarch64-linux-gnu --bin=/usr/bin --cxflags="-target aarch64-linux-gnu" --shflags="-target aarch64-linux-gnu -fuse-ld=lld" --root && xmake --all --root
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4

@@ -54,9 +54,6 @@ target("BinaryStream")
             "-stdlib=libc++",
             "-fPIC"
         )
-        add_shflags(
-            "-stdlib=libc++"
-        )
         if is_mode("release") then
             add_cxflags(
                 "-O3"
