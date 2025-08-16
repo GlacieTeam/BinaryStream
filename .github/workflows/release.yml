@@ -86,16 +86,16 @@ jobs:
       uses: xmake-io/github-action-setup-xmake@v1
 
     - name: Build BinaryStream Static (Debug)
-      run: xmake f --mode=debug --kind=static && xmake --all
+      run: xmake f --mode=debug --kind=static --root && xmake --all --root
 
     - name: Build BinaryStream Shared (Debug)
-      run: xmake f --mode=debug --kind=shared && xmake --all
+      run: xmake f --mode=debug --kind=shared --root && xmake --all --root
       
     - name: Build BinaryStream Static (Release)
-      run: xmake f --mode=release --kind=static && xmake --all
+      run: xmake f --mode=release --kind=static --root && xmake --all --root
 
     - name: Build BinaryStream Shared (Release)
-      run: xmake f --mode=release --kind=shared && xmake --all
+      run: xmake f --mode=release --kind=shared --root && xmake --all --root
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
