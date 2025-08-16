@@ -88,6 +88,7 @@ jobs:
     - name: Install Clang 18
       run: |
         apt-get update -y
+        apt-get install -y wget gnupg build-essential lsb-release software-properties-common
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
         ./llvm.sh 18
