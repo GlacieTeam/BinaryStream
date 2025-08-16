@@ -9,8 +9,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-windows:
-    name: Build on Windows (MSVC)
+  build-windows-x86_64:
+    name: Build on Windows X86_64 (MSVC)
     runs-on: windows-2022
     steps:
     - name: Checkout repository
@@ -39,12 +39,44 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: BinaryStream-Windows-${{ github.sha }}
-        path: |
-          artifacts/
+        name: BinaryStream-windows-x86_64-${{ github.sha }}
+        path: artifacts/BinaryStream-windows-x86_64.zip
+
+  build-windows-arm64:
+    name: Build on Windows ARM64 (MSVC)
+    runs-on: windows-2022
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: arm64
+        
+    - name: Install xmake
+      uses: xmake-io/github-action-setup-xmake@v1
+        
+    - name: Build BinaryStream Static (Debug)
+      run: xmake config --mode=debug --arch=amd64 --kind=static && xmake --all
+
+    - name: Build BinaryStream Shared (Debug)
+      run: xmake config --mode=debug --arch=amd64 --kind=shared && xmake --all
+      
+    - name: Build BinaryStream Static (Release)
+      run: xmake config --mode=release --arch=amd64 --kind=static && xmake --all
+
+    - name: Build BinaryStream Shared (Release)
+      run: xmake config --mode=release --arch=amd64 --kind=shared && xmake --all
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: BinaryStream-windows-arm64-${{ github.sha }}
+        path: artifacts/BinaryStream-windows-arm64.zip
 
   build-linux:
-    name: Build on Linux (Clang)
+    name: Build on Linux X86_64 (Clang)
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
@@ -74,12 +106,11 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: BinaryStream-Linux-${{ github.sha }}
-        path: |
-          artifacts/
+        name: BinaryStream-linux-x86_64-${{ github.sha }}
+        path: artifacts/BinaryStream-linux-x86_64.zip
 
   build-macos:
-    name: Build on MacOS (Clang)
+    name: Build on MacOS ARM64 (Clang)
     runs-on: macos-14
     steps:
     - name: Checkout repository
@@ -107,5 +138,5 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: BinaryStream-MacOS-${{ github.sha }}
-        path: artifacts/
+        name: BinaryStream-macosx-arm64-${{ github.sha }}
+        path: artifacts/BinaryStream-macosx-arm64.zip

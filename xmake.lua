@@ -54,7 +54,7 @@ target("BinaryStream")
             "-stdlib=libc++",
             "-fPIC"
         )
-        add_ldflags(
+        add_shflags(
             "-stdlib=libc++"
         )
         if is_mode("release") then
@@ -70,14 +70,17 @@ target("BinaryStream")
             if is_plat("linux") then
                 add_syslinks("c++")
             else
-                add_ldflags("-dynamiclib")
+                add_shflags("-dynamiclib")
             end
         end
     end
     if is_config("kind", "shared") then
         after_build(function (target)
-            local plat = os.host()
-            local arch = os.arch()
+            local plat = target:plat()
+            local arch = target:arch()
+            if arch == "x64" then 
+                arch = "x86_64"
+            end
             local target_file = target:targetfile()
             local filename = path.filename(target_file)
             local output_dir = path.join(os.projectdir(), "bin/BinaryStream-" .. plat .. "-" .. arch)
