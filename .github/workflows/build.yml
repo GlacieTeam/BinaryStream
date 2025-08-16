@@ -134,7 +134,6 @@ jobs:
         sudo ./llvm.sh 18
         sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100
         sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
-        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-18 main" | sudo tee /etc/apt/sources.list.d/llvm.list
         sudo dpkg --add-architecture arm64
         sudo apt update
         sudo apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu libc++-18-dev:arm64 libc++abi-18-dev:arm64
