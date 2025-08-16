@@ -154,7 +154,35 @@ jobs:
         name: BinaryStream-linux-arm64-${{ github.sha }}
         path: artifacts/BinaryStream-linux-arm64.zip
 
-  build-macos:
+  build-macos-x86_64:
+    name: Build on MacOS X86_64 (Clang)
+    runs-on: macos-14
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install xmake
+      uses: xmake-io/github-action-setup-xmake@v1
+
+    - name: Build BinaryStream Static (Debug)
+      run: xmake f --mode=debug --kind=static --arch=x86_64 && xmake --all
+
+    - name: Build BinaryStream Shared (Debug)
+      run: xmake f --mode=debug --kind=shared --arch=x86_64 && xmake --all
+
+    - name: Build BinaryStream Static (Release)
+      run: xmake f --mode=release --kind=static --arch=x86_64 && xmake --all
+
+    - name: Build BinaryStream Shared (Release)
+      run: xmake f --mode=release --kind=shared --arch=x86_64 && xmake --all
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: BinaryStream-macosx-x86_64-${{ github.sha }}
+        path: artifacts/BinaryStream-macosx-x86_64.zip
+
+  build-macos-arm64:
     name: Build on MacOS ARM64 (Clang)
     runs-on: macos-14
     steps:
@@ -182,7 +210,9 @@ jobs:
       - build-windows-x86_64
       - build-windows-arm64
       - build-linux-x86_64
-      - build-macos
+      - build-linux-arm64
+      - build-macos-x86_64
+      - build-macos-arm64
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -202,6 +232,16 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: BinaryStream-linux-x86_64-${{ github.sha }}
+          path: artifact
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: BinaryStream-linux-arm64-${{ github.sha }}
+          path: artifact
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: BinaryStream-macosx-x86_64-${{ github.sha }}
           path: artifact
 
       - uses: actions/download-artifact@v4
