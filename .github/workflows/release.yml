@@ -80,6 +80,9 @@ jobs:
         ./llvm.sh 18
         update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100
         update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-18 main" | sudo tee /etc/apt/sources.list.d/llvm.list
+        sudo dpkg --add-architecture arm64
+        sudo apt update
         apt-get install -y libc++-18-dev libc++abi-18-dev
 
     - name: Install xmake
