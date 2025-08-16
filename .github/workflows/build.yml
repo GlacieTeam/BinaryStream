@@ -87,7 +87,10 @@ jobs:
         
     - name: Install Clang 18
       run: |
+        ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
+        echo "Etc/UTC" > /etc/timezone
         apt-get update -y
+        DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
         apt-get install -y wget gnupg build-essential lsb-release software-properties-common zip
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
@@ -97,10 +100,7 @@ jobs:
         apt-get install -y libc++-18-dev libc++abi-18-dev libunwind-18-dev
 
     - name: Install xmake
-      run: |
-        wget https://xmake.io/shget.text -O xmake-install.sh
-        chmod +x xmake-install.sh
-        ./xmake-install.sh --yes
+      uses: xmake-io/github-action-setup-xmake@v1
 
     - name: Build BinaryStream Static (Debug)
       run: xmake f --mode=debug --kind=static && xmake --all
