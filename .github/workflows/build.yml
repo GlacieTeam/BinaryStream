@@ -53,21 +53,21 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: arm64
-        
+
     - name: Install xmake
       uses: xmake-io/github-action-setup-xmake@v1
         
     - name: Build BinaryStream Static (Debug)
-      run: xmake config --mode=debug --arch=amd64 --kind=static && xmake --all
+      run: xmake config --mode=debug --arch=arm64 --kind=static && xmake --all
 
     - name: Build BinaryStream Shared (Debug)
-      run: xmake config --mode=debug --arch=amd64 --kind=shared && xmake --all
+      run: xmake config --mode=debug --arch=arm64 --kind=shared && xmake --all
       
     - name: Build BinaryStream Static (Release)
-      run: xmake config --mode=release --arch=amd64 --kind=static && xmake --all
+      run: xmake config --mode=release --arch=arm64 --kind=static && xmake --all
 
     - name: Build BinaryStream Shared (Release)
-      run: xmake config --mode=release --arch=amd64 --kind=shared && xmake --all
+      run: xmake config --mode=release --arch=arm64 --kind=shared && xmake --all
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
