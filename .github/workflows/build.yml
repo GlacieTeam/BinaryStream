@@ -82,11 +82,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Setup Clang
+    - name: Setup Clang 18
       run: |
-        sudo apt-get update && sudo apt-get install -y clang
-        sudo apt-get update
-        sudo apt-get install -y clang libc++-dev libc++abi-dev
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 18
+        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100
+        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
+        sudo apt install -y libc++-18-dev libc++abi-18-dev libunwind-18-dev
       
     - name: Install xmake
       uses: xmake-io/github-action-setup-xmake@v1
