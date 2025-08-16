@@ -70,7 +70,7 @@ jobs:
         
     - name: Install Clang 18
       run: |
-        sudo apt update
+        apt-get update -y
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
         ./llvm.sh 18
