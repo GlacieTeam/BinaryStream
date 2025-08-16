@@ -25,16 +25,16 @@ jobs:
       uses: xmake-io/github-action-setup-xmake@v1
         
     - name: Build BinaryStream Static (Debug)
-      run: xmake config --mode=debug --kind=static && xmake --all
+      run: xmake f --mode=debug --kind=static && xmake --all
 
     - name: Build BinaryStream Shared (Debug)
-      run: xmake config --mode=debug --kind=shared && xmake --all
+      run: xmake f --mode=debug --kind=shared && xmake --all
       
     - name: Build BinaryStream Static (Release)
-      run: xmake config --mode=release --kind=static && xmake --all
+      run: xmake f --mode=release --kind=static && xmake --all
 
     - name: Build BinaryStream Shared (Release)
-      run: xmake config --mode=release --kind=shared && xmake --all
+      run: xmake f --mode=release --kind=shared && xmake --all
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
@@ -58,16 +58,16 @@ jobs:
       uses: xmake-io/github-action-setup-xmake@v1
         
     - name: Build BinaryStream Static (Debug)
-      run: xmake config --mode=debug --arch=arm64 --kind=static && xmake --all
+      run: xmake f --mode=debug --arch=arm64 --kind=static && xmake --all
 
     - name: Build BinaryStream Shared (Debug)
-      run: xmake config --mode=debug --arch=arm64 --kind=shared && xmake --all
+      run: xmake f --mode=debug --arch=arm64 --kind=shared && xmake --all
       
     - name: Build BinaryStream Static (Release)
-      run: xmake config --mode=release --arch=arm64 --kind=static && xmake --all
+      run: xmake f --mode=release --arch=arm64 --kind=static && xmake --all
 
     - name: Build BinaryStream Shared (Release)
-      run: xmake config --mode=release --arch=arm64 --kind=shared && xmake --all
+      run: xmake f --mode=release --arch=arm64 --kind=shared && xmake --all
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
@@ -78,33 +78,40 @@ jobs:
   build-linux:
     name: Build on Linux X86_64 (Clang)
     runs-on: ubuntu-22.04
+    container:
+      image: ubuntu:20.04
+      options: --privileged
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      
-    - name: Setup Clang 18
+        
+    - name: Install Clang 18
       run: |
+        sudo apt update
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
-        sudo ./llvm.sh 18
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
-        sudo apt install -y libc++-18-dev libc++abi-18-dev libunwind-18-dev
-      
+        ./llvm.sh 18
+        update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100
+        update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
+        apt-get install -y libc++-18-dev libc++abi-18-dev libunwind-18-dev
+
     - name: Install xmake
-      uses: xmake-io/github-action-setup-xmake@v1
-        
+      run: |
+        wget https://xmake.io/shget.text -O xmake-install.sh
+        chmod +x xmake-install.sh
+        ./xmake-install.sh --yes
+
     - name: Build BinaryStream Static (Debug)
-      run: xmake config --mode=debug --kind=static && xmake --all
+      run: xmake f --mode=debug --kind=static && xmake --all
 
     - name: Build BinaryStream Shared (Debug)
-      run: xmake config --mode=debug --kind=shared && xmake --all
+      run: xmake f --mode=debug --kind=shared && xmake --all
       
     - name: Build BinaryStream Static (Release)
-      run: xmake config --mode=release --kind=static && xmake --all
+      run: xmake f --mode=release --kind=static && xmake --all
 
     - name: Build BinaryStream Shared (Release)
-      run: xmake config --mode=release --kind=shared && xmake --all
+      run: xmake f --mode=release --kind=shared && xmake --all
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
@@ -119,24 +126,20 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Ensure Command Line Tools
-      run: |
-        xcode-select --install 2>/dev/null || true
-
     - name: Install xmake
       uses: xmake-io/github-action-setup-xmake@v1
 
     - name: Build BinaryStream Static (Debug)
-      run: xmake config --mode=debug --kind=static && xmake --all
+      run: xmake f --mode=debug --kind=static && xmake --all
 
     - name: Build BinaryStream Shared (Debug)
-      run: xmake config --mode=debug --kind=shared && xmake --all
+      run: xmake f --mode=debug --kind=shared && xmake --all
 
     - name: Build BinaryStream Static (Release)
-      run: xmake config --mode=release --kind=static && xmake --all
+      run: xmake f --mode=release --kind=static && xmake --all
 
     - name: Build BinaryStream Shared (Release)
-      run: xmake config --mode=release --kind=shared && xmake --all
+      run: xmake f --mode=release --kind=shared && xmake --all
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
