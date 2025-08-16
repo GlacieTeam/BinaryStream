@@ -78,20 +78,21 @@ target("BinaryStream")
         after_build(function (target)
             local plat = target:plat()
             local arch = target:arch()
-            if arch == "x64" then 
-                arch = "x86_64"
+            local name = target:name()
+            if arch == "x64" then
+                arch = "x86_64" -- Fix arch name on Windows
             end
             local target_file = target:targetfile()
             local filename = path.filename(target_file)
-            local output_dir = path.join(os.projectdir(), "bin/BinaryStream-" .. plat .. "-" .. arch)
+            local output_dir = path.join(os.projectdir(), "bin/" .. name .. "-" .. plat .. "-" .. arch)
             os.mkdir(output_dir)
             local artifact_dir = path.join(os.projectdir(), "artifacts")
             os.mkdir(artifact_dir)
             os.cp(target_file, output_dir)
-            if plat == "macosx" then
+            if plat == "macosx" then -- Fix rpath on MacOS
                 os.run("install_name_tool -id @rpath/" .. filename .. " " .. path.join(output_dir, filename))
             end
-            local zip_file = path.join(os.projectdir(), "bin/BinaryStream-" .. plat .. "-" .. arch .. ".zip")
+            local zip_file = path.join(os.projectdir(), "bin/" .. name .. "-" .. plat .. "-" .. arch .. ".zip")
             os.rm(zip_file)
             if plat == "windows" then
                 local win_src = output_dir:gsub("/", "\\")
