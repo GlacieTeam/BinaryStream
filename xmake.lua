@@ -66,7 +66,7 @@ target("BinaryStream")
             )
             if is_plat("linux") then
                 add_syslinks("c++")
-            else
+            elseif is_plat("macosx") then
                 add_shflags("-dynamiclib")
             end
         end
@@ -91,7 +91,7 @@ target("BinaryStream")
             end
             local zip_file = path.join(os.projectdir(), "bin/" .. name .. "-" .. plat .. "-" .. arch .. ".zip")
             os.rm(zip_file)
-            if plat == "windows" then
+            if os.host() == "windows" then
                 local win_src = output_dir:gsub("/", "\\")
                 local win_dest = zip_file:gsub("/", "\\")
                 local command = string.format(
