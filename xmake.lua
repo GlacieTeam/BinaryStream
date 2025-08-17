@@ -4,7 +4,7 @@ if is_plat("windows") then
     if not has_config("vs_runtime") then
         set_runtimes("MD")
     end
-else
+elseif is_plat("linux") or is_plat("macosx") then
     set_toolchains("clang")
 end
 
