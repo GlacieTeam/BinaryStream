@@ -52,12 +52,12 @@ jobs:
       
     - name: Build BinaryStream Static (Release)
       run: |
-        xmake f --mode=release --kind=static
+        xmake f --mode=release --arch=arm64 --kind=static
         xmake --all
 
     - name: Build BinaryStream Shared (Release)
       run: |
-        xmake f --mode=release --kind=shared
+        xmake f --mode=release --arch=arm64 --kind=shared
         xmake --all
 
     - name: Upload Artifact
@@ -182,12 +182,12 @@ jobs:
       
     - name: Build BinaryStream Static (Release)
       run: |
-        xmake f --mode=release --kind=static
+        xmake f --mode=release --arch=x86_64 --kind=static
         xmake --all
 
     - name: Build BinaryStream Shared (Release)
       run: |
-        xmake f --mode=release --kind=shared
+        xmake f --mode=release --arch=x86_64 --kind=shared
         xmake --all
 
     - name: Upload Artifact
