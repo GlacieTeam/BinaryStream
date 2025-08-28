@@ -69,8 +69,9 @@ target("BinaryStream")
                 "-static-libstdc++",
                 "-static-libgcc"
             )
-            add_syslinks("libc++.a", "libc++abi.a")
-            if is_plat("macosx") then
+            if is_plat("linux") then
+                add_syslinks("libc++.a", "libc++abi.a")
+            elseif is_plat("macosx") then
                 add_shflags("-dynamiclib")
             end
         end
