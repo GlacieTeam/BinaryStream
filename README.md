@@ -4,7 +4,7 @@ A BinaryStream Library written in C++
 
 ## Usage
 ```C++
-using namespace bedrock_protocol;
+using namespace bstream;
 
 // Read
 std::string inputBuffer; // Buffer to read

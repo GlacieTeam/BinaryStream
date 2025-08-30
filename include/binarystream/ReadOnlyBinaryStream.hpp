@@ -10,12 +10,13 @@
 #include <array>
 #include <binarystream-c/Macros.h>
 #include <bit>
+#include <bitset>
 #include <cstdint>
 #include <string>
 #include <type_traits>
 #include <vector>
 
-namespace bedrock_protocol {
+namespace bstream {
 
 class BinaryStream;
 
@@ -27,16 +28,35 @@ protected:
     std::string_view mBufferView;
     size_t           mReadPointer;
     bool             mHasOverflowed;
+    bool             mBigEndian;
 
 private:
     template <typename T>
     bool read(T* target, bool bigEndian = false) noexcept;
 
 public:
-    [[nodiscard]] BSAPI explicit ReadOnlyBinaryStream(std::string_view buffer, bool copyBuffer = false);
-    [[nodiscard]] BSAPI explicit ReadOnlyBinaryStream(std::vector<uint8_t> const& buffer, bool copyBuffer = false);
-    [[nodiscard]] BSAPI explicit ReadOnlyBinaryStream(const char* data, size_t size, bool copyBuffer = false);
-    [[nodiscard]] BSAPI explicit ReadOnlyBinaryStream(const uint8_t* data, size_t size, bool copyBuffer = false);
+    [[nodiscard]] BSAPI explicit ReadOnlyBinaryStream(
+        std::string_view buffer,
+        bool             copyBuffer = false,
+        bool             bigEndian  = false
+    );
+    [[nodiscard]] BSAPI explicit ReadOnlyBinaryStream(
+        std::vector<uint8_t> const& buffer,
+        bool                        copyBuffer = false,
+        bool                        bigEndian  = false
+    );
+    [[nodiscard]] BSAPI explicit ReadOnlyBinaryStream(
+        const char* data,
+        size_t      size,
+        bool        copyBuffer = false,
+        bool        bigEndian  = false
+    );
+    [[nodiscard]] BSAPI explicit ReadOnlyBinaryStream(
+        const uint8_t* data,
+        size_t         size,
+        bool           copyBuffer = false,
+        bool           bigEndian  = false
+    );
 
     [[nodiscard]] BSAPI size_t size() const noexcept;
     [[nodiscard]] BSAPI size_t getPosition() const noexcept;
@@ -72,10 +92,24 @@ public:
     [[nodiscard]] BSAPI int32_t   getSignedBigEndianInt() noexcept;
     [[nodiscard]] BSAPI uint32_t  getUnsignedInt24() noexcept;
 
-    BSAPI void                      getString(std::string& outString);
-    [[nodiscard]] std::string BSAPI getString();
+    BSAPI void          getString(std::string& outString);
+    [[nodiscard]] BSAPI std::string getString();
     BSAPI void                      getRawBytes(std::string& rawBuffer, size_t length);
-    [[nodiscard]] std::string BSAPI getRawBytes(size_t length);
+    [[nodiscard]] BSAPI std::string getRawBytes(size_t length);
+
+    template <size_t N>
+    void getBitset(std::bitset<N>& bitSet) {
+        bitSet.reset();
+        size_t  bitIndex = 0;
+        uint8_t byte;
+        do {
+            byte = getUnsignedChar();
+            for (int i = 0; i < 7; i++) {
+                bitSet.set(bitIndex, byte & (1 << i));
+                bitIndex++;
+            }
+        } while (byte & 0x80u);
+    }
 };
 
 namespace detail {
@@ -92,4 +126,4 @@ template <typename T>
 }
 } // namespace detail
 
-} // namespace bedrock_protocol
+} // namespace bstream

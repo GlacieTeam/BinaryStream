@@ -10,8 +10,8 @@
 
 namespace {
 
-inline bedrock_protocol::ReadOnlyBinaryStream* to_robs(void* handle) {
-    return reinterpret_cast<bedrock_protocol::ReadOnlyBinaryStream*>(handle);
+inline bstream::ReadOnlyBinaryStream* to_robs(void* handle) {
+    return reinterpret_cast<bstream::ReadOnlyBinaryStream*>(handle);
 }
 
 } // namespace
@@ -26,19 +26,13 @@ void stream_buffer_destroy(stream_buffer* buffer) {
     }
 }
 
-void* read_only_binary_stream_create(const uint8_t* data, size_t size, bool copy_data) {
+void* read_only_binary_stream_create(const uint8_t* data, size_t size, bool copy_data, bool big_endian) {
     try {
         if (data && size > 0) {
-            return new bedrock_protocol::ReadOnlyBinaryStream(reinterpret_cast<const char*>(data), size, copy_data);
+            return new bstream::ReadOnlyBinaryStream(reinterpret_cast<const char*>(data), size, copy_data, big_endian);
         } else {
-            return read_only_binary_stream_create_empty();
+            return nullptr;
         }
-    } catch (...) { return nullptr; }
-}
-
-void* read_only_binary_stream_create_empty() {
-    try {
-        return new bedrock_protocol::ReadOnlyBinaryStream(std::string_view{});
     } catch (...) { return nullptr; }
 }
 

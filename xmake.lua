@@ -49,6 +49,7 @@ target("BinaryStream")
     else
         add_cxflags(
             "-Wall",
+            "-Wextra",
             "-pedantic",
             "-fexceptions",
             "-stdlib=libc++",

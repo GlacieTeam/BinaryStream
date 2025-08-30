@@ -5,14 +5,17 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-#include "binarystream/BinaryStream.hpp"
+#include "bstream.hpp"
+#include <span>
 
-namespace bedrock_protocol {
+namespace bstream {
 
-BinaryStream::BinaryStream() : ReadOnlyBinaryStream(std::string(), true), mBuffer(mOwnedBuffer) {}
+BinaryStream::BinaryStream(bool bigEndian)
+: ReadOnlyBinaryStream(std::string(), true, bigEndian),
+  mBuffer(mOwnedBuffer) {}
 
-BinaryStream::BinaryStream(std::string& buffer, bool copyBuffer)
-: ReadOnlyBinaryStream(buffer, copyBuffer),
+BinaryStream::BinaryStream(std::string& buffer, bool copyBuffer, bool bigEndian)
+: ReadOnlyBinaryStream(buffer, copyBuffer, bigEndian),
   mBuffer(copyBuffer ? mOwnedBuffer : buffer) {
     mBufferView = mBuffer;
 }
@@ -47,34 +50,37 @@ std::string BinaryStream::getAndReleaseData() {
 
 void BinaryStream::writeBytes(const void* origin, size_t num) {
     if (num > 0) {
-        mBuffer.append(reinterpret_cast<const char*>(origin), num);
+        std::string buffer(reinterpret_cast<const char*>(origin), num);
+        if (mBigEndian) { std::ranges::reverse(buffer); }
+        mBuffer.append(buffer);
         mBufferView = mBuffer;
     }
 }
 
-void BinaryStream::writeByte(std::byte value) { write(value); }
+void BinaryStream::writeByte(std::byte value) { write(value, mBigEndian); }
 
-void BinaryStream::writeUnsignedChar(uint8_t value) { write(value); }
+void BinaryStream::writeUnsignedChar(uint8_t value) { write(value, mBigEndian); }
 
-void BinaryStream::writeUnsignedShort(uint16_t value) { write(value); }
+void BinaryStream::writeUnsignedShort(uint16_t value) { write(value, mBigEndian); }
 
-void BinaryStream::writeUnsignedInt(uint32_t value) { write(value); }
+void BinaryStream::writeUnsignedInt(uint32_t value) { write(value, mBigEndian); }
 
-void BinaryStream::writeUnsignedInt64(uint64_t value) { write(value); }
+void BinaryStream::writeUnsignedInt64(uint64_t value) { write(value, mBigEndian); }
 
-void BinaryStream::writeBool(bool value) { write(value); }
+void BinaryStream::writeBool(bool value) { write(value, mBigEndian); }
 
-void BinaryStream::writeDouble(double value) { write(value); }
+void BinaryStream::writeDouble(double value) { write(value, mBigEndian); }
 
-void BinaryStream::writeFloat(float value) { write(value); }
+void BinaryStream::writeFloat(float value) { write(value, mBigEndian); }
 
-void BinaryStream::writeSignedInt(int32_t value) { write(value); }
+void BinaryStream::writeSignedInt(int32_t value) { write(value, mBigEndian); }
 
-void BinaryStream::writeSignedInt64(int64_t value) { write(value); }
+void BinaryStream::writeSignedInt64(int64_t value) { write(value, mBigEndian); }
 
-void BinaryStream::writeSignedShort(int16_t value) { write(value); }
+void BinaryStream::writeSignedShort(int16_t value) { write(value, mBigEndian); }
 
 void BinaryStream::writeUnsignedVarInt(uint32_t uvalue) {
+    if (mBigEndian) { uvalue = detail::swapEndian(uvalue); }
     do {
         uint8_t next_byte   = uvalue & 0x7F;
         uvalue            >>= 7;
@@ -84,6 +90,7 @@ void BinaryStream::writeUnsignedVarInt(uint32_t uvalue) {
 }
 
 void BinaryStream::writeUnsignedVarInt64(uint64_t uvalue) {
+    if (mBigEndian) { uvalue = detail::swapEndian(uvalue); }
     do {
         uint8_t next_byte   = uvalue & 0x7F;
         uvalue            >>= 7;
@@ -124,9 +131,15 @@ void BinaryStream::writeString(std::string_view value) {
 }
 
 void BinaryStream::writeUnsignedInt24(uint32_t value) {
-    writeUnsignedChar(static_cast<uint8_t>(value & 0xFF));
-    writeUnsignedChar(static_cast<uint8_t>((value >> 8) & 0xFF));
-    writeUnsignedChar(static_cast<uint8_t>((value >> 16) & 0xFF));
+    if (mBigEndian) {
+        writeUnsignedChar(static_cast<uint8_t>((value >> 16) & 0xFF));
+        writeUnsignedChar(static_cast<uint8_t>((value >> 8) & 0xFF));
+        writeUnsignedChar(static_cast<uint8_t>(value & 0xFF));
+    } else {
+        writeUnsignedChar(static_cast<uint8_t>(value & 0xFF));
+        writeUnsignedChar(static_cast<uint8_t>((value >> 8) & 0xFF));
+        writeUnsignedChar(static_cast<uint8_t>((value >> 16) & 0xFF));
+    }
 }
 
 void BinaryStream::writeRawBytes(std::string_view rawBuffer) {
@@ -138,4 +151,4 @@ void BinaryStream::writeRawBytes(std::string_view rawBuffer) {
 
 void BinaryStream::writeStream(ReadOnlyBinaryStream const& stream) { writeRawBytes(stream.view()); }
 
-} // namespace bedrock_protocol
+} // namespace bstream

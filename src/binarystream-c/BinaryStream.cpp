@@ -10,27 +10,25 @@
 
 namespace {
 
-inline bedrock_protocol::BinaryStream* to_bs(void* handle) {
-    return reinterpret_cast<bedrock_protocol::BinaryStream*>(handle);
-}
+inline bstream::BinaryStream* to_bs(void* handle) { return reinterpret_cast<bstream::BinaryStream*>(handle); }
 
 } // namespace
 
 extern "C" {
 
-void* binary_stream_create() {
+void* binary_stream_create(bool big_endian) {
     try {
-        return new bedrock_protocol::BinaryStream();
+        return new bstream::BinaryStream(big_endian);
     } catch (...) { return nullptr; }
 }
 
-void* binary_stream_create_with_buffer(const uint8_t* data, size_t size, bool copy_data) {
+void* binary_stream_create_with_buffer(const uint8_t* data, size_t size, bool copy_data, bool big_endian) {
     try {
         if (data) {
             std::string buffer(reinterpret_cast<const char*>(data), size);
-            return new bedrock_protocol::BinaryStream(buffer, copy_data);
+            return new bstream::BinaryStream(buffer, copy_data, big_endian);
         } else {
-            return binary_stream_create();
+            return binary_stream_create(big_endian);
         }
     } catch (...) { return nullptr; }
 }

@@ -6,28 +6,30 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include "binarystream/ReadOnlyBinaryStream.hpp"
+#include <span>
 
-namespace bedrock_protocol {
+namespace bstream {
 
-ReadOnlyBinaryStream::ReadOnlyBinaryStream(std::string_view buffer, bool copyBuffer) {
+ReadOnlyBinaryStream::ReadOnlyBinaryStream(std::string_view buffer, bool copyBuffer, bool bigEndian)
+: mReadPointer(0),
+  mHasOverflowed(false),
+  mBigEndian(bigEndian) {
     if (copyBuffer) {
         mOwnedBuffer = buffer;
         mBufferView  = mOwnedBuffer;
     } else {
         mBufferView = buffer;
     }
-    mReadPointer   = 0;
-    mHasOverflowed = false;
 }
 
-ReadOnlyBinaryStream::ReadOnlyBinaryStream(std::vector<uint8_t> const& buffer, bool copyBuffer)
-: ReadOnlyBinaryStream(buffer.data(), buffer.size(), copyBuffer) {}
+ReadOnlyBinaryStream::ReadOnlyBinaryStream(std::vector<uint8_t> const& buffer, bool copyBuffer, bool bigEndian)
+: ReadOnlyBinaryStream(buffer.data(), buffer.size(), copyBuffer, bigEndian) {}
 
-ReadOnlyBinaryStream::ReadOnlyBinaryStream(const char* data, size_t size, bool copyBuffer)
-: ReadOnlyBinaryStream(std::string(data, size), copyBuffer) {}
+ReadOnlyBinaryStream::ReadOnlyBinaryStream(const char* data, size_t size, bool copyBuffer, bool bigEndian)
+: ReadOnlyBinaryStream(std::string(data, size), copyBuffer, bigEndian) {}
 
-ReadOnlyBinaryStream::ReadOnlyBinaryStream(const uint8_t* data, size_t size, bool copyBuffer)
-: ReadOnlyBinaryStream(reinterpret_cast<const char*>(data), size, copyBuffer) {}
+ReadOnlyBinaryStream::ReadOnlyBinaryStream(const uint8_t* data, size_t size, bool copyBuffer, bool bigEndian)
+: ReadOnlyBinaryStream(reinterpret_cast<const char*>(data), size, copyBuffer, bigEndian) {}
 
 template <typename T>
 bool ReadOnlyBinaryStream::read(T* target, bool bigEndian) noexcept {
@@ -86,12 +88,18 @@ bool ReadOnlyBinaryStream::getBytes(void* target, size_t num) noexcept {
 
     std::copy(mBufferView.begin() + mReadPointer, mBufferView.begin() + newPointer, static_cast<char*>(target));
     mReadPointer = newPointer;
+
+    if (mBigEndian && num > 1) {
+        std::span<std::byte> buffer{static_cast<std::byte*>(target), num};
+        std::ranges::reverse(buffer);
+    }
+
     return true;
 }
 
 uint8_t ReadOnlyBinaryStream::getUnsignedChar() noexcept {
     uint8_t value = 0;
-    read(&value);
+    read(&value, mBigEndian);
     return value;
 }
 
@@ -99,19 +107,19 @@ std::byte ReadOnlyBinaryStream::getByte() noexcept { return std::byte(getUnsigne
 
 uint16_t ReadOnlyBinaryStream::getUnsignedShort() noexcept {
     uint16_t value = 0;
-    read(&value);
+    read(&value, mBigEndian);
     return value;
 }
 
 uint32_t ReadOnlyBinaryStream::getUnsignedInt() noexcept {
     uint32_t value = 0;
-    read(&value);
+    read(&value, mBigEndian);
     return value;
 }
 
 uint64_t ReadOnlyBinaryStream::getUnsignedInt64() noexcept {
     uint64_t value = 0;
-    read(&value);
+    read(&value, mBigEndian);
     return value;
 }
 
@@ -119,31 +127,31 @@ bool ReadOnlyBinaryStream::getBool() noexcept { return getUnsignedChar() != 0; }
 
 double ReadOnlyBinaryStream::getDouble() noexcept {
     double value = 0;
-    read(&value);
+    read(&value, mBigEndian);
     return value;
 }
 
 float ReadOnlyBinaryStream::getFloat() noexcept {
     float value = 0;
-    read(&value);
+    read(&value, mBigEndian);
     return value;
 }
 
 int32_t ReadOnlyBinaryStream::getSignedInt() noexcept {
     int32_t value = 0;
-    read(&value);
+    read(&value, mBigEndian);
     return value;
 }
 
 int64_t ReadOnlyBinaryStream::getSignedInt64() noexcept {
     int64_t value = 0;
-    read(&value);
+    read(&value, mBigEndian);
     return value;
 }
 
 int16_t ReadOnlyBinaryStream::getSignedShort() noexcept {
     int16_t value = 0;
-    read(&value);
+    read(&value, mBigEndian);
     return value;
 }
 
@@ -169,6 +177,7 @@ uint32_t ReadOnlyBinaryStream::getUnsignedVarInt() noexcept {
 
     } while (byte & 0x80);
 
+    if (mBigEndian) { value = detail::swapEndian(value); }
     return value;
 }
 
@@ -194,6 +203,7 @@ uint64_t ReadOnlyBinaryStream::getUnsignedVarInt64() noexcept {
 
     } while (byte & 0x80);
 
+    if (mBigEndian) { value = detail::swapEndian(value); }
     return value;
 }
 
@@ -243,10 +253,16 @@ uint32_t ReadOnlyBinaryStream::getUnsignedInt24() noexcept {
         mHasOverflowed = true;
         return 0;
     }
-
-    uint32_t value  = static_cast<uint8_t>(mBufferView[mReadPointer++]);
-    value          |= static_cast<uint32_t>(static_cast<uint8_t>(mBufferView[mReadPointer++])) << 8;
-    value          |= static_cast<uint32_t>(static_cast<uint8_t>(mBufferView[mReadPointer++])) << 16;
+    uint32_t value = 0;
+    if (mBigEndian) {
+        value  = static_cast<uint8_t>(mBufferView[mReadPointer++]) << 16;
+        value |= static_cast<uint32_t>(static_cast<uint8_t>(mBufferView[mReadPointer++])) << 8;
+        value |= static_cast<uint32_t>(static_cast<uint8_t>(mBufferView[mReadPointer++]));
+    } else {
+        value  = static_cast<uint8_t>(mBufferView[mReadPointer++]);
+        value |= static_cast<uint32_t>(static_cast<uint8_t>(mBufferView[mReadPointer++])) << 8;
+        value |= static_cast<uint32_t>(static_cast<uint8_t>(mBufferView[mReadPointer++])) << 16;
+    }
     return value;
 }
 
@@ -272,4 +288,4 @@ std::string ReadOnlyBinaryStream::getRawBytes(size_t length) {
     return result;
 }
 
-} // namespace bedrock_protocol
+} // namespace bstream

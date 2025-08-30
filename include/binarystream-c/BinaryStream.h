@@ -12,8 +12,8 @@
 extern "C" {
 #endif
 
-BSAPI void* binary_stream_create();
-BSAPI void* binary_stream_create_with_buffer(const uint8_t* data, size_t size, bool copy_data);
+BSAPI void* binary_stream_create(bool big_endian);
+BSAPI void* binary_stream_create_with_buffer(const uint8_t* data, size_t size, bool copy_data, bool big_endian);
 BSAPI void  binary_stream_destroy(void* stream);
 BSAPI void  binary_stream_reset(void* stream);
 

@@ -20,8 +20,7 @@ struct stream_buffer {
 };
 BSAPI void stream_buffer_destroy(stream_buffer* buffer);
 
-BSAPI void* read_only_binary_stream_create(const uint8_t* data, size_t size, bool copy_data);
-BSAPI void* read_only_binary_stream_create_empty();
+BSAPI void* read_only_binary_stream_create(const uint8_t* data, size_t size, bool copy_data, bool big_endian);
 BSAPI void  read_only_binary_stream_destroy(void* stream);
 
 BSAPI size_t read_only_binary_stream_size(void* stream);
