@@ -10,7 +10,6 @@
 #include <array>
 #include <binarystream-c/Macros.h>
 #include <bit>
-#include <bitset>
 #include <cstdint>
 #include <string>
 #include <type_traits>
@@ -20,6 +19,20 @@ namespace bstream {
 
 class BinaryStream;
 
+namespace detail {
+template <typename T>
+    requires std::is_trivially_copyable_v<T>
+[[nodiscard]] constexpr T swapEndian(T u) noexcept {
+    if constexpr (sizeof(T) == 1) {
+        return u;
+    } else {
+        auto bytes = std::bit_cast<std::array<std::byte, sizeof(T)>>(u);
+        std::reverse(bytes.begin(), bytes.end());
+        return std::bit_cast<T>(bytes);
+    }
+}
+} // namespace detail
+
 class ReadOnlyBinaryStream {
     friend class BinaryStream;
 
@@ -28,7 +41,7 @@ protected:
     std::string_view mBufferView;
     size_t           mReadPointer;
     bool             mHasOverflowed;
-    bool             mBigEndian;
+    const bool       mBigEndian;
 
 private:
     template <typename T>
@@ -96,34 +109,6 @@ public:
     [[nodiscard]] BSAPI std::string getString();
     BSAPI void                      getRawBytes(std::string& rawBuffer, size_t length);
     [[nodiscard]] BSAPI std::string getRawBytes(size_t length);
-
-    template <size_t N>
-    void getBitset(std::bitset<N>& bitSet) {
-        bitSet.reset();
-        size_t  bitIndex = 0;
-        uint8_t byte;
-        do {
-            byte = getUnsignedChar();
-            for (int i = 0; i < 7; i++) {
-                bitSet.set(bitIndex, byte & (1 << i));
-                bitIndex++;
-            }
-        } while (byte & 0x80u);
-    }
 };
-
-namespace detail {
-template <typename T>
-    requires std::is_trivially_copyable_v<T>
-[[nodiscard]] constexpr T swapEndian(T u) noexcept {
-    if constexpr (sizeof(T) == 1) {
-        return u;
-    } else {
-        auto bytes = std::bit_cast<std::array<std::byte, sizeof(T)>>(u);
-        std::reverse(bytes.begin(), bytes.end());
-        return std::bit_cast<T>(bytes);
-    }
-}
-} // namespace detail
 
 } // namespace bstream

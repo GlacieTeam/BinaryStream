@@ -53,20 +53,6 @@ public:
     BSAPI void writeUnsignedInt24(uint32_t value);
     BSAPI void writeRawBytes(std::string_view rawBuffer);
     BSAPI void writeStream(ReadOnlyBinaryStream const& stream);
-
-    template <size_t N>
-    void writeBitset(std::bitset<N> const& bitSet) {
-        size_t bitIndex = 0;
-        do {
-            uint8_t byte = 0;
-            for (int i = 0; i < 7; i++) {
-                if (bitSet.test(bitIndex)) { byte |= (1 << i); }
-                bitIndex++;
-            }
-            if (bitIndex < bitSet.size()) { byte |= 0x80u; }
-            writeUnsignedChar(byte);
-        } while (bitIndex < bitSet.size());
-    }
 };
 
 } // namespace bstream
