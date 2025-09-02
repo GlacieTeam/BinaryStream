@@ -50,9 +50,7 @@ std::string BinaryStream::getAndReleaseData() {
 
 void BinaryStream::writeBytes(const void* origin, size_t num) {
     if (num > 0) {
-        std::string buffer(reinterpret_cast<const char*>(origin), num);
-        if (mBigEndian) { std::ranges::reverse(buffer); }
-        mBuffer.append(buffer);
+        mBuffer.append(reinterpret_cast<const char*>(origin), num);
         mBufferView = mBuffer;
     }
 }

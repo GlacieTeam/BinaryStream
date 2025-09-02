@@ -41,11 +41,7 @@ bool ReadOnlyBinaryStream::read(T* target, bool bigEndian) noexcept {
         return false;
     }
 
-    std::copy(
-        mBufferView.begin() + mReadPointer,
-        mBufferView.begin() + newReadPointer,
-        reinterpret_cast<char*>(target)
-    );
+    std::copy_n(mBufferView.begin() + mReadPointer, sizeof(T), reinterpret_cast<char*>(target));
     mReadPointer = newReadPointer;
     if (bigEndian) { *target = detail::swapEndian(*target); }
     return true;
@@ -86,13 +82,8 @@ bool ReadOnlyBinaryStream::getBytes(void* target, size_t num) noexcept {
         return false;
     }
 
-    std::copy(mBufferView.begin() + mReadPointer, mBufferView.begin() + newPointer, static_cast<char*>(target));
+    std::copy_n(mBufferView.begin() + mReadPointer, num, static_cast<char*>(target));
     mReadPointer = newPointer;
-
-    if (mBigEndian && num > 1) {
-        std::span<std::byte> buffer{static_cast<std::byte*>(target), num};
-        std::ranges::reverse(buffer);
-    }
 
     return true;
 }
