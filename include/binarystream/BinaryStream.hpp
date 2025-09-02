@@ -50,8 +50,11 @@ public:
     BSAPI void writeNormalizedFloat(float value);
     BSAPI void writeSignedBigEndianInt(int32_t value);
     BSAPI void writeString(std::string_view value);
+    BSAPI void writeShortString(std::string_view value);
+    BSAPI void writeLongString(std::string_view value);
     BSAPI void writeUnsignedInt24(uint32_t value);
     BSAPI void writeRawBytes(std::string_view rawBuffer);
+    BSAPI void writeRawBytes(std::string_view rawBuffer, size_t size);
     BSAPI void writeStream(ReadOnlyBinaryStream const& stream);
 };
 

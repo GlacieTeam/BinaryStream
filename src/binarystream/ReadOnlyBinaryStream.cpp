@@ -218,24 +218,34 @@ int32_t ReadOnlyBinaryStream::getSignedBigEndianInt() noexcept {
 
 void ReadOnlyBinaryStream::getString(std::string& outString) {
     uint32_t length = getUnsignedVarInt();
-    if (mHasOverflowed || length == 0) {
-        outString.clear();
-        return;
-    }
+    getRawBytes(outString, length);
+}
 
-    if (mReadPointer + length > mBufferView.size()) {
-        mHasOverflowed = true;
-        outString.clear();
-        return;
-    }
+void ReadOnlyBinaryStream::getShortString(std::string& outString) {
+    short length = getSignedShort();
+    getRawBytes(outString, length);
+}
 
-    outString.assign(mBufferView.substr(mReadPointer, length));
-    mReadPointer += length;
+void ReadOnlyBinaryStream::getLongString(std::string& outString) {
+    int length = getSignedInt();
+    getRawBytes(outString, length);
 }
 
 std::string ReadOnlyBinaryStream::getString() {
     std::string result;
     getString(result);
+    return result;
+}
+
+std::string ReadOnlyBinaryStream::getShortString() {
+    std::string result;
+    getShortString(result);
+    return result;
+}
+
+std::string ReadOnlyBinaryStream::getLongString() {
+    std::string result;
+    getLongString(result);
     return result;
 }
 

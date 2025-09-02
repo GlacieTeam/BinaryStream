@@ -121,11 +121,21 @@ void BinaryStream::writeNormalizedFloat(float value) {
 void BinaryStream::writeSignedBigEndianInt(int32_t value) { write(value, true); }
 
 void BinaryStream::writeString(std::string_view value) {
-    writeUnsignedVarInt(static_cast<uint32_t>(value.size()));
-    if (!value.empty()) {
-        mBuffer.append(value.data(), value.size());
-        mBufferView = mBuffer;
-    }
+    auto size = static_cast<uint32_t>(value.size());
+    writeUnsignedVarInt(size);
+    writeRawBytes(value, size);
+}
+
+void BinaryStream::writeShortString(std::string_view value) {
+    auto size = static_cast<uint16_t>(value.size());
+    writeSignedShort(size);
+    writeRawBytes(value, size);
+}
+
+void BinaryStream::writeLongString(std::string_view value) {
+    auto size = static_cast<int>(value.size());
+    writeSignedInt(size);
+    writeRawBytes(value, size);
 }
 
 void BinaryStream::writeUnsignedInt24(uint32_t value) {
@@ -143,6 +153,13 @@ void BinaryStream::writeUnsignedInt24(uint32_t value) {
 void BinaryStream::writeRawBytes(std::string_view rawBuffer) {
     if (!rawBuffer.empty()) {
         mBuffer.append(rawBuffer);
+        mBufferView = mBuffer;
+    }
+}
+
+void BinaryStream::writeRawBytes(std::string_view rawBuffer, size_t size) {
+    if (!rawBuffer.empty()) {
+        mBuffer.append(rawBuffer.data(), size);
         mBufferView = mBuffer;
     }
 }

@@ -105,9 +105,15 @@ public:
     [[nodiscard]] BSAPI int32_t   getSignedBigEndianInt() noexcept;
     [[nodiscard]] BSAPI uint32_t  getUnsignedInt24() noexcept;
 
-    BSAPI void          getString(std::string& outString);
+    BSAPI void getString(std::string& outString);
+    BSAPI void getShortString(std::string& outString);
+    BSAPI void getLongString(std::string& outString);
+
     [[nodiscard]] BSAPI std::string getString();
-    BSAPI void                      getRawBytes(std::string& rawBuffer, size_t length);
+    [[nodiscard]] BSAPI std::string getShortString();
+    [[nodiscard]] BSAPI std::string getLongString();
+
+    BSAPI void          getRawBytes(std::string& rawBuffer, size_t length);
     [[nodiscard]] BSAPI std::string getRawBytes(size_t length);
 };
 
