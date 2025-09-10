@@ -123,19 +123,19 @@ void BinaryStream::writeSignedBigEndianInt(int32_t value) { write(value, true); 
 void BinaryStream::writeString(std::string_view value) {
     auto size = static_cast<uint32_t>(value.size());
     writeUnsignedVarInt(size);
-    writeRawBytes(value, size);
+    writeRawBytes(value, static_cast<size_t>(size));
 }
 
 void BinaryStream::writeShortString(std::string_view value) {
-    auto size = static_cast<uint16_t>(value.size());
+    auto size = static_cast<int16_t>(value.size());
     writeSignedShort(size);
-    writeRawBytes(value, size);
+    writeRawBytes(value, static_cast<size_t>(size));
 }
 
 void BinaryStream::writeLongString(std::string_view value) {
     auto size = static_cast<int>(value.size());
     writeSignedInt(size);
-    writeRawBytes(value, size);
+    writeRawBytes(value, static_cast<size_t>(size));
 }
 
 void BinaryStream::writeUnsignedInt24(uint32_t value) {

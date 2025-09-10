@@ -163,7 +163,7 @@ uint32_t ReadOnlyBinaryStream::getUnsignedVarInt() noexcept {
         }
 
         byte   = static_cast<uint8_t>(mBufferView[mReadPointer++]);
-        value |= (byte & 0x7F) << shift;
+        value |= static_cast<uint32_t>(byte & 0x7F) << shift;
         shift += 7;
 
     } while (byte & 0x80);
@@ -218,17 +218,17 @@ int32_t ReadOnlyBinaryStream::getSignedBigEndianInt() noexcept {
 
 void ReadOnlyBinaryStream::getString(std::string& outString) {
     uint32_t length = getUnsignedVarInt();
-    getRawBytes(outString, length);
+    getRawBytes(outString, static_cast<size_t>(length));
 }
 
 void ReadOnlyBinaryStream::getShortString(std::string& outString) {
     short length = getSignedShort();
-    getRawBytes(outString, length);
+    getRawBytes(outString, static_cast<size_t>(length));
 }
 
 void ReadOnlyBinaryStream::getLongString(std::string& outString) {
     int length = getSignedInt();
-    getRawBytes(outString, length);
+    getRawBytes(outString, static_cast<size_t>(length));
 }
 
 std::string ReadOnlyBinaryStream::getString() {
@@ -249,6 +249,27 @@ std::string ReadOnlyBinaryStream::getLongString() {
     return result;
 }
 
+std::string_view ReadOnlyBinaryStream::getStringView() {
+    auto length   = static_cast<size_t>(getUnsignedVarInt());
+    auto result   = mBufferView.substr(mReadPointer, length);
+    mReadPointer += length;
+    return result;
+}
+
+std::string_view ReadOnlyBinaryStream::getShortStringView() {
+    auto length   = static_cast<size_t>(getSignedShort());
+    auto result   = mBufferView.substr(mReadPointer, length);
+    mReadPointer += length;
+    return result;
+}
+
+std::string_view ReadOnlyBinaryStream::getLongStringView() {
+    auto length   = static_cast<size_t>(getSignedInt());
+    auto result   = mBufferView.substr(mReadPointer, length);
+    mReadPointer += length;
+    return result;
+}
+
 uint32_t ReadOnlyBinaryStream::getUnsignedInt24() noexcept {
     if (mReadPointer + 3 > mBufferView.size()) {
         mHasOverflowed = true;
@@ -256,7 +277,7 @@ uint32_t ReadOnlyBinaryStream::getUnsignedInt24() noexcept {
     }
     uint32_t value = 0;
     if (mBigEndian) {
-        value  = static_cast<uint8_t>(mBufferView[mReadPointer++]) << 16;
+        value  = static_cast<uint32_t>(static_cast<uint8_t>(mBufferView[mReadPointer++]) << 16);
         value |= static_cast<uint32_t>(static_cast<uint8_t>(mBufferView[mReadPointer++])) << 8;
         value |= static_cast<uint32_t>(static_cast<uint8_t>(mBufferView[mReadPointer++]));
     } else {

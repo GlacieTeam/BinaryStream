@@ -113,6 +113,10 @@ public:
     [[nodiscard]] BSAPI std::string getShortString();
     [[nodiscard]] BSAPI std::string getLongString();
 
+    [[nodiscard]] BSAPI std::string_view getStringView();
+    [[nodiscard]] BSAPI std::string_view getShortStringView();
+    [[nodiscard]] BSAPI std::string_view getLongStringView();
+
     BSAPI void          getRawBytes(std::string& rawBuffer, size_t length);
     [[nodiscard]] BSAPI std::string getRawBytes(size_t length);
 };
