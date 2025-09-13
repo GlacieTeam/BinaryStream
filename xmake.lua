@@ -1,11 +1,7 @@
 add_rules("mode.debug", "mode.release")
 
-if is_plat("windows") then
-    if not has_config("vs_runtime") then
-        set_runtimes("MD")
-    end
-elseif is_plat("linux") or is_plat("macosx") then
-    set_toolchains("clang")
+if is_plat("windows") and not has_config("vs_runtime") then
+    set_runtimes("MD")
 end
 
 option("kind")
@@ -16,7 +12,7 @@ option_end()
 
 target("BinaryStream")
     set_kind("$(kind)")
-    set_languages("c++23")
+    set_languages("cxx23")
     set_exceptions("none")
     add_includedirs("include")
     add_files("src/**.cpp")
@@ -53,7 +49,6 @@ target("BinaryStream")
             "-Wconversion",
             "-pedantic",
             "-fexceptions",
-            "-stdlib=libc++",
             "-fPIC"
         )
         if is_mode("release") then
@@ -67,13 +62,10 @@ target("BinaryStream")
                 "-fvisibility-inlines-hidden"
             )
             add_shflags(
-                "-stdlib=libc++",
                 "-static-libstdc++",
                 "-static-libgcc"
             )
-            if is_plat("linux") then
-                add_syslinks("libc++.a", "libc++abi.a")
-            elseif is_plat("macosx") then
+            if is_plat("macosx") then
                 add_shflags("-dynamiclib")
             end
         end

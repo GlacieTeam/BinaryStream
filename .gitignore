@@ -44,3 +44,4 @@ bin
 artifacts
 llvm.sh
 xmake-install.sh
+scripts
