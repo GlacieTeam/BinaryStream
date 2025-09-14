@@ -92,16 +92,6 @@ jobs:
     - name: Install xmake
       uses: xmake-io/github-action-setup-xmake@v1
 
-    - name: Build BinaryStream Static (Debug)
-      run: |
-        xmake f --mode=debug --kind=static --root
-        xmake --all --root
-
-    - name: Build BinaryStream Shared (Debug)
-      run: |
-        xmake f --mode=debug --kind=shared --root
-        xmake --all --root
-
     - name: Build BinaryStream Static (Release)
       run: |
         xmake f --mode=release --kind=static --root
@@ -145,16 +135,6 @@ jobs:
       
     - name: Install xmake
       uses: xmake-io/github-action-setup-xmake@v1
-
-    - name: Build BinaryStream Static (Debug)
-      run: |
-        xmake f --mode=debug --kind=static --arch=arm64 --sdk=/usr/aarch64-linux-gnu --bin=/usr/bin --cc=aarch64-linux-gnu-gcc --cxx=aarch64-linux-gnu-g++ --ld=aarch64-linux-gnu-g++ --sh=aarch64-linux-gnu-g++ --root
-        xmake --all --root
-
-    - name: Build BinaryStream Shared (Debug)
-      run: |
-        xmake f --mode=debug --kind=shared --arch=arm64 --sdk=/usr/aarch64-linux-gnu --bin=/usr/bin --cc=aarch64-linux-gnu-gcc --cxx=aarch64-linux-gnu-g++ --ld=aarch64-linux-gnu-g++ --sh=aarch64-linux-gnu-g++ --root
-        xmake --all --root
 
     - name: Build BinaryStream Static (Release)
       run: |
